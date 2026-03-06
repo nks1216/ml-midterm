@@ -29,26 +29,64 @@ TARGET = "INCTOT"
 
 IPUMS_NIU_CODES = {99, 999, 9999, 99999, 999999, 9999999, 99999999}
 
-EXCLUDE_VARS = (
-    # IDs
-    {"SERIAL", "CPSID", "CPSIDP", "CPSIDV",
-     "HRHHID", "HRHHID2", "PERNUM", "INDIVIDCC"}
-    # Survey weights
-    | {"ASECWTH", "ASECWT"}
-    # Income sub-components (these sum to INCTOT, so including them is circular)
-    | {"INCTOT", "INCWAGE", "INCBUS", "INCFARM", "INCSS",
-       "INCWELFR", "INCRETIR", "INCSSI", "INCINT", "INCUNEMP",
-       "INCWKCOM", "INCVET", "INCSURV", "INCDISAB", "INCDIVID",
-       "INCRENT", "INCEDUC", "INCCHILD", "INCASIST", "INCOTHER",
-       "INCRANN", "INCPENS", "INCLONGJ", "OINCBUS", "OINCFARM",
-       "OINCWAGE", "INCSURV1", "INCSURV2", "INCDISA1", "INCDISA2",
-       "INCRET1", "INCRET2", "INCPEN1", "INCPEN2", "INCRINT1",
-       "INCRINT2", "INCCAPG", "HHINCOME", "FTOTVAL"}
-    # Tax variables (derived directly from income)
-    | {"ADJGINC", "EITCRED", "FEDTAX", "FEDTAXAC",
-       "FICA", "MARGTAX", "STATETAX", "STATAXAC", "TAXINC",
-       "CTCCRD", "ACTCCRD", "DEPSTAT"}
-)
+SELECTED_FEATURES = [
+    # Demographics
+    "AGE",              # Age
+    "SEX",              # Sex
+    "RACE",             # Race
+    "MARST",            # Marital status
+    "VETSTAT",          # Veteran status
+    "RELATE",           # Relationship to household head
+    "POPSTAT",          # Adult civilian, armed forces, or child
+    "HISPAN",           # Hispanic origin
+    "NATIVITY",         # Foreign-born or native
+    "CITIZEN",          # Citizenship status
+    "BPL",              # Birthplace
+    # Education
+    "EDUC",             # Educational attainment recode
+    "SCHLCOLL",         # School or college attendance
+    # Family
+    "FAMSIZE",          # Number of family members
+    "FAMKIND",          # Kind of family unit
+    # Geography
+    "REGION",           # Census region
+    "STATEFIP",         # State (FIPS code)
+    "METRO",            # Metropolitan status
+    "CBSASZ",           # Metro area size
+    # Employment characteristics
+    "EMPSTAT",          # Employment status
+    "LABFORCE",         # Labor force status
+    "CLASSWKR",         # Class of worker
+    "OCC2010",          # Occupation (2010 basis)
+    "IND",              # Industry
+    "UHRSWORKT",        # Hours usually worked per week (all jobs)
+    "UHRSWORK1",        # Hours usually worked per week (main job)
+    "WKSTAT",           # Full/part-time status
+    "NUMEMPS",          # Number of employers last year
+    "FIRMSIZE",         # Number of employees at firm
+    "PENSION",          # Pension plan at work
+    "PAIDHOUR",         # Paid by the hour
+    "UNION",            # Union membership
+    "SRCEARN",          # Source of earnings from longest job
+    "RETCONT",          # Retirement contributions
+    # Housing
+    "OWNERSHP",         # Ownership of dwelling
+    "UNITSSTR",         # Units in structure
+    "PUBHOUS",          # Living in public housing
+    "RENTSUB",          # Government rent subsidy
+    # Government benefits
+    "FOODSTMP",         # Food stamp recipiency
+    "HEATSUB",          # Received energy subsidy
+    # Health insurance (key indicators only)
+    "ANYCOVLY",         # Any health insurance coverage last year
+    "PHINSUR",          # Private health insurance last year
+    "GRPCOVLY",         # Employment-based group health last year
+    "HIMCAIDLY",        # Covered by Medicaid last year
+    "HIMCARELY",        # Covered by Medicare last year
+    "PAIDGH",           # Employer paid for group health plan
+    # Migration
+    "MIGRATE1",         # Migration status, 1 year
+]
 
 
 def parse_ddi_xml(xml_path):
@@ -80,14 +118,14 @@ def load_data(codebook_dir, raw_dir):
     """Load CPS fixed-width data using DDI XML codebook.
 
     Args:
-        codebook_dir: Path to directory containing cps_00002.xml.
-        raw_dir: Path to directory containing cps_00002.dat.
+        codebook_dir: Path to directory containing cps_00001.xml.
+        raw_dir: Path to directory containing cps_00001.dat.
     Returns:
         DataFrame with all variables.
     """
-    colspecs, colnames = parse_ddi_xml(codebook_dir / "cps_00002.xml")
+    colspecs, colnames = parse_ddi_xml(codebook_dir / "cps_00001.xml")
     return pd.read_fwf(
-        raw_dir / "cps_00002.dat",
+        raw_dir / "cps_00001.dat",
         colspecs=colspecs,
         names=colnames,
         header=None,
@@ -95,19 +133,14 @@ def load_data(codebook_dir, raw_dir):
 
 
 def select_features(df):
-    """Select analysis features by removing excluded and quality-flag variables.
+    """Select pre-defined analysis features that exist in the DataFrame.
 
     Args:
         df: Raw DataFrame.
     Returns:
-        List of feature column names.
+        List of feature column names present in both SELECTED_FEATURES and df.
     """
-    return [
-        col for col in df.columns
-        if col not in EXCLUDE_VARS
-        and not col.startswith("Q")
-        and col != TARGET
-    ]
+    return [col for col in SELECTED_FEATURES if col in df.columns]
 
 
 def clean_data(df, features):
