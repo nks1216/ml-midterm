@@ -1,3 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
 venv/
-.DS_Store
+.venv/
+env/
+
+# Environment variables
 .env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IPUMS raw data files (large + license-restricted: download from https://cps.ipums.org)
+data/raw/*.dat
+data/raw/*.dat.gz
+
+# IPUMS codebook files (download from https://cps.ipums.org alongside data)
+data/codebook/*.xml
+
+# Generated processed data (reproduced by running src/data_clean.py)
+data/processed/*.csv
