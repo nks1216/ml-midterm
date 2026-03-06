@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This project aims to predict total household income using microdata from the IPUMS CPS. We build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Random Forest, (3) Gradient Boosting, and (4) Elastic Net —to compare their predictive performance on tabular socioeconomic data.
+This project aims to predict total household income using microdata from the IPUMS CPS. We build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data.
 
 After evaluating individual models, we explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal of the project is to identify the most effective modeling approach for income prediction and to provide a clear, reproducible workflow.
 
@@ -13,14 +13,14 @@ After evaluating individual models, we explore ensemble methods such as bagging,
 ## 3.1. Linear Regression
 Baseline model for interpretability and comparison.
 
-## 3.2. Random Forest
+## 3.2. Elastic Net (New Model)
+Regularized linear model combining L1 and L2 penalties to improve stability and handle correlated predictors.
+
+## 3.3. Random Forest
 Bagging-based tree ensemble capturing nonlinear relationships.
 
-## 3.3. Gradient Boosting
+## 3.4. Gradient Boosting
 Boosting-based model that sequentially corrects prediction errors.
-
-## 3.4. Elastic Net (New Model)
-Regularized linear model combining L1 and L2 penalties to improve stability and handle correlated predictors.
 
 ## 4. Results and Model Comparison
 
