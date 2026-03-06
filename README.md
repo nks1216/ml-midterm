@@ -53,8 +53,8 @@ pip install -r requirements.txt
 ```
 6.3. Download the data 
 Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
-- data/raw/cps_00002.dat
-- data/codebook/cps_00002.xml
+- data/raw/cps_00001.dat
+- data/codebook/cps_00001.xml
   
 6.4. Run the code  
 ```
