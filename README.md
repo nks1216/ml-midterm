@@ -11,7 +11,7 @@ the most effective modeling approach and provide a clear, reproducible workflow.
 
 ### 1. Data Source
 
-This project uses microdata from the **IPUMS Current Population Survey (CPS)**, maintained by the University of Minnesota. IPUMS CPS provides harmonized extracts of the U.S. Census Bureau's Current Population Survey — a monthly survey of approximately 60,000 households that serves as the primary source for U.S. labor force statistics.
+This project uses microdata from the **IPUMS Current Population Survey (CPS)**, maintained by the University of Minnesota. IPUMS CPS provides U.S. Census Bureau's Current Population Survey — a monthly survey of approximately 60,000 households that serves as the primary source for U.S. labor force statistics.
 
 - **Extract ID**: `cps_00001`
 - **File format**: Fixed-width ASCII (`.dat`), parsed via DDI XML codebook (`.xml`)
@@ -31,7 +31,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 #### Feature Variables ($X$)
 
-43 features were selected from the 313-variable extract, grouped into 8 thematic categories.
+43 features were selected from the 313-variable extract, grouped into 8 categories.
 
 | # | Category | Variable | Description |
 |---|----------|----------|-------------|
