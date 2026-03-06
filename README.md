@@ -12,6 +12,20 @@ Midterm project for ECO395M
 5. Repository Structure
 
 # 6. Reproducibility
+6.0. Setting up the Virtual Environment
+Create a virtual environment:
+```
+python3 -m venv venv
+```
+Activate the virtual environment:
+```
+source venv/bin/activate
+```
+Install all required packages:
+```
+pip install -r requirements.txt
+```
+
 6.1. Clone the repository  
 ```
 git clone <repo-url>
@@ -28,4 +42,4 @@ Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLX
 python src/data_clean.py          # Step 1: data cleaning
 python src/models/model_rf_gb_lss.py  # Step 2: running models
 ```
-8. Future Improvements
+7. Future Improvements
