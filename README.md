@@ -17,7 +17,7 @@ git clone <repo-url>
 cd ml-midterm
 pip install -r requirements.txt
 ```
-Download the data through IPUMS, or receive the data and save it in the below folders  
+Download the data via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00002.dat
 - data/codebook/cps_00002.xml
 ```
