@@ -30,8 +30,5 @@ Thumbs.db
 data/raw/*.dat
 data/raw/*.dat.gz
 
-# IPUMS codebook files (download from https://cps.ipums.org alongside data)
-data/codebook/*.xml
-
 # Generated processed data (reproduced by running src/data_clean.py)
 data/processed/*.csv
