@@ -32,3 +32,6 @@ data/raw/*.dat.gz
 
 # Generated processed data (reproduced by running src/data_clean.py)
 data/processed/*.csv
+
+# temporary block
+data/codebook/cps_00002.xml
