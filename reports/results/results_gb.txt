@@ -1,0 +1,29 @@
+Gradient Boosting Results
+=========================
+
+R² score: 0.3559
+MSE: 4,795,937,263.36
+MAE: 30,158.57
+
+Top 20 Feature Importances:
+---------------------------
+  1. RETCONT              0.461967
+  2. OCC2010              0.145644
+  3. EDUC                 0.134039
+  4. SEX                  0.039571
+  5. UHRSWORKT            0.028340
+  6. PAIDGH               0.027510
+  7. AGE                  0.025270
+  8. UHRSWORK1            0.018081
+  9. IND                  0.015351
+ 10. PENSION              0.014145
+ 11. RELATE               0.013668
+ 12. MARST                0.012346
+ 13. EMPSTAT              0.008449
+ 14. FIRMSIZE             0.006905
+ 15. NUMEMPS              0.006210
+ 16. CLASSWKR             0.005179
+ 17. HIMCAIDLY            0.004806
+ 18. WKSTAT               0.004153
+ 19. CBSASZ               0.003507
+ 20. PUBHOUS              0.003378
