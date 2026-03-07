@@ -132,8 +132,8 @@ Boosting-based model that sequentially corrects prediction errors.
 |-------------------|---------------|--------|-------|
 | Linear Regression |72,636         |34,199  |0.2914 |
 | Elastic Net       |     
-| Random Forest     |
-| Gradient Boosting | 4,795,937,263 |30,158  | 0.3559| 
+| Random Forest     |               |        |0.3313 |     
+| Gradient Boosting | 4,795,937,263 |30,158  |0.3559 | 
 
 ### Top 5 Feature Importances (by Model)
 
@@ -149,17 +149,16 @@ Boosting-based model that sequentially corrects prediction errors.
 |                       | 3 |  |  |  |
 |                       | 4 |  |  |  |
 |                       | 5 |  |  |  |
-| **Random Forest**     | 1 |  |  |  |
-|                       | 2 |  |  |  |
-|                       | 3 |  |  |  |
-|                       | 4 |  |  |  |
-|                       | 5 |  |  |  |
+| **Random Forest**     | 1 | RETCONT   | 0.2553 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1168 | Occupation code (2010 classification) |
+|                       | 3 | AGE       | 0.0695 | Respondent’s age |
+|                       | 4 | EDUC      | 0.0568 | Educational attainment |
+|                       | 5 | IND       | 0.0493 | Industry |
 | **Gradient Boosting** | 1 | RETCONT   | 0.4620 | Retirement-related income |
 |                       | 2 | OCC2010   | 0.1456 | Occupation code (2010 classification) |
 |                       | 3 | EDUC      | 0.1340 | Educational attainment |
 |                       | 4 | SEX       | 0.0396 | Respondent’s sex |
 |                       | 5 | UHRSWORKT | 0.0283 | Hours usually worked per week |
-
 
 
 ## 4.2. Ensemble Methods (Bagging, Boosting, Stacking)
