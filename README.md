@@ -131,7 +131,7 @@ Boosting-based model that sequentially corrects prediction errors.
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
 | Linear Regression |72,636         |34,199  |0.2914 |
-| Elastic Net       |     
+| Elastic Net       |5,390,603,768  |33,895  |0.2760 |
 | Random Forest     |               |        |0.3313 |     
 | Gradient Boosting | 4,795,937,263 |30,158  |0.3559 | 
 
@@ -144,11 +144,11 @@ Boosting-based model that sequentially corrects prediction errors.
 |                       | 3 |  |  |  |
 |                       | 4 |  |  |  |
 |                       | 5 |  |  |  |
-| **Elastic Net**       | 1 |  |  |  |
-|                       | 2 |  |  |  |
-|                       | 3 |  |  |  |
-|                       | 4 |  |  |  |
-|                       | 5 |  |  |  |
+| **Elastic Net**   | 1 | RETCONT   | 15792.15 | Retirement contributions |
+|                   | 2 | EDUC      | 9165.76  | Educational attainment |
+|                   | 3 | OCC2010   | 7074.13  | Occupation code (2010 classification) |
+|                   | 4 | SEX       | 6974.37  | Respondent's sex |
+|                   | 5 | AGE       | 4752.53  | Respondent's age |
 | **Random Forest**     | 1 | RETCONT   | 0.2553 | Retirement-related income |
 |                       | 2 | OCC2010   | 0.1168 | Occupation code (2010 classification) |
 |                       | 3 | AGE       | 0.0695 | Respondent’s age |
@@ -188,10 +188,11 @@ Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLX
 - data/codebook/cps_00001.xml
 ### 4. Run the code  
 ```
-python src/data_clean.py          # Step 1: data cleaning
+python src/data_clean.py
+python src/models/model_lr.py
+python src/models/model_en.py
 python src/models/model_rf.py
-???
-???
-???# Step 2: running models
+python src/models/model_gb.py
+
 ```
 ## 7. Future Improvements
