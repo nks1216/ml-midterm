@@ -31,7 +31,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 #### Feature Variables ($X$)
 
-43 features were selected from the 313-variable extract, grouped into 8 categories.
+47 features were selected from the 313-variable extract, grouped into 8 categories.
 
 | # | Category | Variable | Description |
 |---|----------|----------|-------------|
