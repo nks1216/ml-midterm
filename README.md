@@ -31,7 +31,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 #### Feature Variables ($X$)
 
-47 features were selected from the 313-variable extract, grouped into 8 categories.
+43 features were selected from the 313-variable extract, grouped into 8 categories.
 
 | # | Category | Variable | Description |
 |---|----------|----------|-------------|
@@ -125,7 +125,22 @@ Boosting-based model that sequentially corrects prediction errors.
 ## 4. Results and Model Comparison
 
 ## 4.1. Comparison basic model
-Evaluate all individual models using RMSE, MAE, and R².
+Evaluate four basic models using MSE, MAE, and R².
+
+| Model             | MSE           | MAE    | R²    | 
+|-------------------|---------------|--------|-------|
+| Linear Regression |72,636         |34,199  |0.2914 |
+| Elastic Net       |     
+| Random Forest     |
+| Gradient Boosting | 4,795,937,263 |30,158  | 0.3559| 
+
+Top 5 Feature importances
+| Model             | TOP1          | TOP2   | TOP3  | TOP4 | TOP5|
+|-------------------|---------------|--------|-------|--------|-------|
+| Linear Regression |
+| Elastic Net       |     
+| Random Forest     |
+| Gradient Boosting | RETCONT(0.4620)| OCC2010(0.1456)| EDUC(0.1340)| SEX(0.03957)|UHRSWORKT(0.0283)|
 
 ## 4.2. Ensemble Methods (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
