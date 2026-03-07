@@ -125,7 +125,8 @@ Boosting-based model that sequentially corrects prediction errors.
 ## 4. Results and Model Comparison
 
 ## 4.1. Comparison basic model
-Evaluate four basic models using MSE, MAE, and R².
+
+### MSE, MAE, and R² (by Model)
 
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
@@ -134,13 +135,32 @@ Evaluate four basic models using MSE, MAE, and R².
 | Random Forest     |
 | Gradient Boosting | 4,795,937,263 |30,158  | 0.3559| 
 
-Top 5 Feature importances
-| Model             | TOP1          | TOP2   | TOP3  | TOP4 | TOP5|
-|-------------------|---------------|--------|-------|--------|-------|
-| Linear Regression |
-| Elastic Net       |     
-| Random Forest     |
-| Gradient Boosting | RETCONT(0.4620)| OCC2010(0.1456)| EDUC(0.1340)| SEX(0.03957)|UHRSWORKT(0.0283)|
+### Top 5 Feature Importances (by Model)
+
+| Model | Rank | Feature | Importance | Description |
+|-------|------|----------|-------------|-------------|
+| **Linear Regression** | 1 |  |  |  |
+|                       | 2 |  |  |  |
+|                       | 3 |  |  |  |
+|                       | 4 |  |  |  |
+|                       | 5 |  |  |  |
+| **Elastic Net**       | 1 |  |  |  |
+|                       | 2 |  |  |  |
+|                       | 3 |  |  |  |
+|                       | 4 |  |  |  |
+|                       | 5 |  |  |  |
+| **Random Forest**     | 1 |  |  |  |
+|                       | 2 |  |  |  |
+|                       | 3 |  |  |  |
+|                       | 4 |  |  |  |
+|                       | 5 |  |  |  |
+| **Gradient Boosting** | 1 | RETCONT   | 0.4620 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1456 | Occupation code (2010 classification) |
+|                       | 3 | EDUC      | 0.1340 | Educational attainment |
+|                       | 4 | SEX       | 0.0396 | Respondent’s sex |
+|                       | 5 | UHRSWORKT | 0.0283 | Hours usually worked per week |
+
+
 
 ## 4.2. Ensemble Methods (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
