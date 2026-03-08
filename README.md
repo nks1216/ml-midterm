@@ -217,7 +217,8 @@ Boosting-based model that sequentially corrects prediction errors.
 | **Linear Regression** | <!-- INSERT: reports/figures/rf_results.png (Panel 2) --> |
 | **Elastic Net** | <!-- INSERT: reports/figures/gb_results.png (Panel 2) --> |
 | **Random Forest** | <img width="437" height="412" alt="image" src="https://github.com/user-attachments/assets/5b972691-2066-462a-802d-3bf358cc24c0" /> |
-| **Gradient Boosting** | <!-- INSERT: reports/figures/lasso_results.png (Panel 2) --> |
+| **Gradient Boosting** |![Gradient Boosting Actual vs Predicted](reports/figures/gb.png)
+ |
 
 
 
