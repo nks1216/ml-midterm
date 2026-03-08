@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
+import matplotlib.pyplot as plt
 
 
 def load_data():
@@ -118,6 +119,45 @@ def save_results(r2, mse, mae, feature_names, importances, top_k=20, out_path="r
     print(f"\nResults saved to {out_path}")
 
 
+def plot_gb_actual_vs_predicted(
+    model, X_test, y_test, out_path="reports/figures/gb_actual_vs_predicted.png"
+):
+    """
+    Plot actual vs predicted income values for Gradient Boosting (log scale version).
+    Args:
+        model: Trained Gradient Boosting pipeline
+        X_test: Test features
+        y_test: True test labels
+        out_path: Output file path
+    """
+    preds = model.predict(X_test)
+
+    # Prevent negative predictions before log1p
+    preds = np.where(preds < 0, 0, preds)
+
+    # Apply log-scale transformation (log1p to handle zeros)
+    actual = np.log1p(y_test)
+    predicted = np.log1p(preds)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.scatter(actual, predicted, alpha=0.3, color="steelblue")
+
+    # Plot the perfect prediction line (y = x)
+    min_val = min(actual.min(), predicted.min())
+    max_val = max(actual.max(), predicted.max())
+    ax.plot([min_val, max_val], [min_val, max_val], "r--")
+
+    ax.set_xlabel("Actual INCTOT ($k, log scale)")
+    ax.set_ylabel("Predicted INCTOT ($k, log scale)")
+    ax.set_title("Gradient Boosting — Actual vs Predicted (log scale)")
+
+    plt.tight_layout()
+    plt.savefig(out_path)
+    plt.close()
+
+    print(f"Actual vs Predicted plot saved to {out_path}")
+
+
 def main():
     """Main execution function: load data, train model, evaluate, save results."""
 
@@ -140,6 +180,9 @@ def main():
         importances=model.feature_importances_,
         out_path="reports/results/results_gb.txt"
     )
+
+    # Save results to png file
+    plot_gb_actual_vs_predicted(model, X_test, y_test)
 
 
 # Run main() only when executed directly (not when imported)
