@@ -126,14 +126,14 @@ At each node, the tree asks a yes/no question about one feature and routes each 
 
 ```
                         ┌─────────────────────────┐
-                        │   RETCONT < threshold?   │   ← Most important split
+                        │   RETCONT < threshold?   │ 
                         └────────────┬────────────┘
                                      │
               ┌──────────────────────┴──────────────────────┐
              Yes                                            No
               │                                              │
    ┌──────────────────┐                        ┌────────────────────────┐
-   │  OCC2010 < 500?  │                        │    AGE < 45?           │
+   │  OCC2010 < 500?  │                        │       AGE < 45?        │
    └────────┬─────────┘                        └──────────┬─────────────┘
             │                                             │
      ┌──────┴──────┐                              ┌───────┴───────┐
