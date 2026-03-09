@@ -182,6 +182,7 @@ Gradient Boosting is an ensemble learning method that builds a sequence of weak 
 The number of boosting stages determines how many incremental correction steps the model performs. The learning rate controls the contribution of each new tree, allowing the model to learn gradually rather than overreacting to residual errors. The maximum depth limits the complexity of each individual tree, ensuring that they remain weak learners and reducing the risk of early overfitting.
 
 **Analysis Method**
+
 For this personal income prediction task, we trained a Gradient Boosting Regressor using 300 boosting stages, a learning rate of 0.05, and a maximum depth of 3. The model was trained on the preprocessed CPS dataset (81,864 training observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to better visualize model performance and reduce the influence of extreme outliers.
 
 **Why These Hyperparameters Are Appropriate?**
