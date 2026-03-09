@@ -9,9 +9,9 @@ the most effective modeling approach and provide a clear, reproducible workflow.
 
 ## 2. Dataset Description
 
-### 1. Data Source
+### 2.1. Data Source
 
-This project uses microdata from the **IPUMS Current Population Survey (CPS)**, maintained by the University of Minnesota. IPUMS CPS provides harmonized extracts of the U.S. Census Bureau's Current Population Survey — a monthly survey of approximately 60,000 households that serves as the primary source for U.S. labor force statistics.
+This project uses microdata from the **IPUMS Current Population Survey (CPS)**, maintained by the University of Minnesota. IPUMS CPS provides U.S. Census Bureau's Current Population Survey — a monthly survey of approximately 60,000 households that serves as the primary source for U.S. labor force statistics.
 
 - **Extract ID**: `cps_00001`
 - **File format**: Fixed-width ASCII (`.dat`), parsed via DDI XML codebook (`.xml`)
@@ -21,7 +21,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 ---
 
-### 2. Variables
+### 2.2 Variables
 
 #### Target Variable ($y$)
 
@@ -31,7 +31,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 #### Feature Variables ($X$)
 
-43 features were selected from the 313-variable extract, grouped into 8 thematic categories.
+47 features were selected from the 313-variable extract, grouped into 8 categories.
 
 | # | Category | Variable | Description |
 |---|----------|----------|-------------|
@@ -87,7 +87,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 ---
 
-### 3. Train / Test Split
+### 2.3. Train / Test Split
 
 The dataset is split into training and test sets using `sklearn.model_selection.train_test_split`:
 
@@ -110,31 +110,125 @@ data/processed/
 
 ## 3. Modeling Approach
 
-## 3.1. Linear Regression
+### 3.1. Linear Regression
 Baseline model for interpretability and comparison.
 
-## 3.2. Elastic Net (New Model)
+### 3.2. Elastic Net (New Model)
 Regularized linear model combining L1 and L2 penalties to improve stability and handle correlated predictors.
 
-## 3.3. Random Forest
-Bagging-based tree ensemble capturing nonlinear relationships.
+### 3.3. Random Forest
 
-## 3.4. Gradient Boosting
+Each tree independently learns a set of splitting rules from a random subset of the training data and a random subset of features. The final prediction is the **average across all 200 trees**, which reduces variance and prevents overfitting compared to a single tree.
+
+#### Decision Tree — Simplified Example
+
+At each node, the tree asks a yes/no question about one feature and routes each observation left or right. The predicted income at each leaf is the average `INCTOT` of all training observations that ended up in that node.
+
+```
+                        ┌─────────────────────────┐
+                        │   RETCONT < threshold?   │ 
+                        └────────────┬────────────┘
+                                     │
+              ┌──────────────────────┴──────────────────────┐
+             Yes                                            No
+              │                                              │
+   ┌──────────────────┐                        ┌────────────────────────┐
+   │  OCC2010 < 500?  │                        │       AGE < 45?        │
+   └────────┬─────────┘                        └──────────┬─────────────┘
+            │                                             │
+     ┌──────┴──────┐                              ┌───────┴───────┐
+    Yes            No                            Yes              No
+     │              │                             │                │
+┌─────────┐   ┌──────────┐                 ┌──────────┐    ┌──────────────┐
+│  EDUC   │   │  EDUC    │                 │Predicted │    │  Predicted   │
+│ < 111?  │   │ >= 111?  │                 │ ~$62,000 │    │  ~$105,000   │
+└────┬────┘   └────┬─────┘                 └──────────┘    └──────────────┘
+     │              │
+┌────┴────┐   ┌─────┴────┐
+│Predicted│   │Predicted │
+│ ~$28,000│   │ ~$75,000 │
+└─────────┘   └──────────┘
+```
+
+This single tree is repeated **200 times**, each time trained on a different random bootstrap sample of the data and a random subset of features. The final `INCTOT` prediction for any individual is the mean of all 200 trees' predictions:
+
+$$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
+
+#### Model Configuration
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `n_estimators` | 200 | Number of decision trees |
+| `max_depth` | 15 | Maximum depth of each tree |
+
+---
+
+> **Note — Numerical vs. Categorical Variables**
+>
+> Random Forest treats all input variables as numeric and makes splits using a single threshold: *"Is feature $X$ less than value $t$?"* This works naturally for **numerical variables** like `AGE` or `UHRSWORK1`, where larger values carry inherent order and magnitude.
+>
+> For **categorical variables** encoded as integers — such as `OCC2010` (occupation codes), `IND` (industry codes), or `REGION` — the model still applies threshold splits (e.g., `OCC2010 < 3000`). This can imply an ordering between categories that does not exist in reality. Since the primary goal of this project is to identify *which variables* matter (not *which categories* within a variable), this would suffice. 
+
+---
+
+### 3.4. Gradient Boosting
 Boosting-based model that sequentially corrects prediction errors.
 
 ## 4. Results and Model Comparison
 
-## 4.1. Comparison basic model
-Evaluate all individual models using RMSE, MAE, and R².
+#### MSE, MAE, and R² 
 
-## 4.2. Ensemble Methods (Bagging, Boosting, Stacking)
+| Model             | MSE           | MAE    | R²    | 
+|-------------------|---------------|--------|-------|
+| Linear Regression | 72,636        |34,199  |0.2914 |
+| Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
+| Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
+| Gradient Boosting | 4,795,937,263 |30,158  |0.3559 | 
+
+#### Top 5 Feature Importances 
+
+| Model | Rank | Feature | Importance | Description |
+|-------|------|----------|-------------|-------------|
+| **Linear Regression** | 1 |  |  |  |
+|                       | 2 |  |  |  |
+|                       | 3 |  |  |  |
+|                       | 4 |  |  |  |
+|                       | 5 |  |  |  |
+| **Elastic Net**       | 1 | RETCONT | 15792.15 | Retirement contributions |
+|                       | 2 | EDUC    | 9165.76  | Educational attainment |
+|                       | 3 | OCC2010 | 7074.13  | Occupation (2010 classification) |
+|                       | 4 | SEX     | 6974.37  | Respondent's sex |
+|                       | 5 | AGE     | 4752.53  | Respondent's age |
+| **Random Forest**     | 1 | RETCONT   | 0.2553 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1168 | Occupation code (2010 classification) |
+|                       | 3 | AGE       | 0.0695 | Respondent’s age |
+|                       | 4 | EDUC      | 0.0568 | Educational attainment |
+|                       | 5 | IND       | 0.0493 | Industry |
+| **Gradient Boosting** | 1 | RETCONT   | 0.4620 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1456 | Occupation code (2010 classification) |
+|                       | 3 | EDUC      | 0.1340 | Educational attainment |
+|                       | 4 | SEX       | 0.0396 | Respondent’s sex |
+|                       | 5 | UHRSWORKT | 0.0283 | Hours usually worked per week |
+
+
+#### Actual vs Predicted 
+| Model | Actual vs. Predicted |
+|-------|----------------------|
+| **Linear Regression** | <!-- INSERT: reports/figures/rf_results.png (Panel 2) --> |
+| **Elastic Net** | <!-- INSERT: reports/figures/gb_results.png (Panel 2) --> |
+| **Random Forest** | <img width="437" height="412" alt="image" src="https://github.com/user-attachments/assets/5b972691-2066-462a-802d-3bf358cc24c0" /> |
+| **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
+ |
+
+
+
+#### Ensemble Methods (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
 
 ## 5. Repository Structure
 
 ## 6. Reproducibility
-6.1. Setting up the Virtual Environment
-
+### 6.1. Setting up the Virtual Environment
 - Create a virtual environment:
 `python3 -m venv venv`
 
@@ -143,21 +237,20 @@ If time permits, apply ensemble techniques to refine predictions and compare the
 
 - Install all required packages:
 `pip install -r requirements.txt`
-
-6.2. Clone the repository  
+### 6.2. Clone the repository  
 ```
 git clone <repo-url>
 cd ml-midterm
 pip install -r requirements.txt
 ```
-6.3. Download the data 
+### 6.3. Download the data 
 Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00001.dat
 - data/codebook/cps_00001.xml
-  
-6.4. Run the code  
-```
-python src/data_clean.py          # Step 1: data cleaning
-python src/models/model_rf_gb_lss.py  # Step 2: running models
-```
+### 4. Run the code  
+python src/data_clean.py
+python src/models/model_lr.py
+python src/models/model_en.py
+python src/models/model_rf.py
+python src/models/model_gb.py
 ## 7. Future Improvements
