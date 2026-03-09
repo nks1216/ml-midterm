@@ -1,11 +1,11 @@
-# Predicting Individual Income Using Machine Learning Models
+# Predicting Personal Income Using Machine Learning Models
 
 ## 1. Project Overview
 
-This project uses CPS microdata to predict total individual income and to identify the key socioeconomic factors associated with income variation. Understanding the determinants of household income has important policy implications: accurate income prediction can support targeted social programs, inform tax and welfare design, and shed light on patterns of inequality and economic mobility.
+This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction can inform labor market analysis, support the design of targeted workforce programs, and shed light on patterns of inequality and economic mobility at the individual level.
 
-To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. We also explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal is to identify 
-the most effective modeling approach and provide a clear, reproducible workflow.
+To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. We also conduct a brief reduced-feature analysis using the top 20 consensus predictors to examine whether a more compact Gradient Boosting model can retain most of the predictive signal. Finally, we explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
+
 
 ## 2. Dataset Description
 
@@ -319,7 +319,7 @@ RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSW
 | R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
 
 
-Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space.
+Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space. This also serves as a simple robustness check, showing that the Gradient Boosting model remains stable even when the feature space is substantially reduced.
 
 
 **Brief Description of Selected Features:**  
