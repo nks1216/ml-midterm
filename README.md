@@ -179,17 +179,18 @@ Gradient Boosting is an ensemble learning method that builds a sequence of weak 
 
 **Hyperparameter Concepts**
 
-The number of boosting stages determines how many incremental correction steps the model performs.
+- Number of boosting stages (n_estimators):  
+    Controls how many sequential correction steps the model performs.
 
-The learning rate controls the contribution of each new tree, allowing the model to learn gradually rather than overreacting to residual errors. 
+- Learning rate:  
+    Determines how much each new tree contributes to the final prediction, preventing the model from overreacting to residual errors.
 
-The maximum depth limits the complexity of each individual tree, ensuring that they remain weak learners and reducing the risk of early overfitting.
+- Maximum depth:  
+    Limits the complexity of each individual tree, keeping them as weak learners and reducing early overfitting.
 
 **Hyperparameter Tuning and Analysis Method**
 
-To improve model performance, we performed hyperparameter tuning using GridSearchCV. 
-
-The search space included:
+To improve model performance, we performed hyperparameter tuning using GridSearchCV. The search space included:
 
 - n_estimators: [100, 200, 300, 400, 500] 
 - learning_rate: [0.01, 0.03, 0.05, 0.1]
@@ -215,14 +216,20 @@ Using the tuned hyperparameters, the model achieved:
 
 **Comparsion with Baseline Gradient Boosting**
 
-|Model         |Baseline GB|**Tuned GB**|Description                                                                |
-|--------------|-----------|------------|---------------------------------------------------------------------------|
-|n_estimators  |300        |200         |200 boosting stages provide sufficient corrective steps without overfitting|
-|learning_rate |0.05       |0.1         |a higher learning rate accelerates convergence                             |
-|max_depth     |3          |4           |a slightly deeper tree captures richer nonlinear interactions              |
-|Test MSE      |4.80B      |4.72B       |lower average error                                                        |
-|Test MAE      |30,158     |29,766      |lower average error                                                        |
-|Test R²       |0.3559     |0.3666      |higher explanatory power                                                   |
+|Model         |Baseline GB|**Tuned GB**|Description               |
+|--------------|-----------|------------|--------------------------|
+|n_estimators  |300        |200         |fewer but sufficient trees|
+|learning_rate |0.05       |0.1         |faster learning           |
+|max_depth     |3          |4           |deeper interactions       |
+|Test MSE      |4.80B      |4.72B       |lower error               |
+|Test MAE      |30,158     |29,766      |lower error               |
+|Test R²       |0.3559     |0.3666      |higher R²                 | 
+
+Top 5 Feature Importance (Baseline GB vs. Tuned GB)
+
+- Both models identify RETCONT, OCC2010, EDUC, and SEX as dominant predictors.
+
+- The tuned model places **AGE** in the top 5 instead of **UHRSWORKKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
 
 The tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance. 
 
