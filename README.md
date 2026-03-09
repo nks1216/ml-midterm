@@ -203,7 +203,7 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
 | Linear Regression | 72,636        |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
-| Gradient Boosting | 4,795,937,263 |30,158  |0.3559 | 
+| Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
 
 #### Top 5 Feature Importances 
 
@@ -220,15 +220,15 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
 |                       | 4 | SEX     | 6974.37  | Respondent's sex |
 |                       | 5 | AGE     | 4752.53  | Respondent's age |
 | **Random Forest**     | 1 | RETCONT   | 0.2553 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1168 | Occupation code (2010 classification) |
+|                       | 2 | OCC2010   | 0.1168 | Occupation (2010 classification) |
 |                       | 3 | AGE       | 0.0695 | Respondent’s age |
 |                       | 4 | EDUC      | 0.0568 | Educational attainment |
 |                       | 5 | IND       | 0.0493 | Industry |
-| **Gradient Boosting** | 1 | RETCONT   | 0.4620 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1456 | Occupation code (2010 classification) |
-|                       | 3 | EDUC      | 0.1340 | Educational attainment |
-|                       | 4 | SEX       | 0.0396 | Respondent’s sex |
-|                       | 5 | UHRSWORKT | 0.0283 | Hours usually worked per week |
+| **Gradient Boosting** | 1 | RETCONT   | 0.4377 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1436 | Occupation (2010 classification) |
+|                       | 3 | EDUC      | 0.1162 | Educational attainment |
+|                       | 4 | SEX       | 0.0340 | Respondent’s sex |
+|                       | 5 | AGE       | 0.0332 | Respondent's age |
 
 
 #### Actual vs Predicted 
