@@ -287,6 +287,16 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
  |
 
 
+#### Top20 
+
+*Feature Selection Rationale*
+
+To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset. The reduced model allows us to test the robustness of the Gradient Boosting results while simplifying the feature space.
+
+(RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR)
+
+
+
 
 #### Ensemble Methods (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
