@@ -216,14 +216,14 @@ Using the tuned hyperparameters, the model achieved:
 
 **Comparsion with Baseline Gradient Boosting**
 
-|Model         |Baseline GB|**Tuned GB**|Description               |
-|--------------|-----------|------------|--------------------------|
-|n_estimators  |300        |200         |fewer but sufficient trees|
-|learning_rate |0.05       |0.1         |faster learning           |
-|max_depth     |3          |4           |deeper interactions       |
-|Test MSE      |4.80B      |4.72B       |lower error               |
-|Test MAE      |30,158     |29,766      |lower error               |
-|Test R²       |0.3559     |0.3666      |higher R²                 | 
+|Parameter/Metric|Baseline GB|**Tuned GB**|Description               |
+|----------------|-----------|------------|--------------------------|
+|n_estimators    |300        |200         |fewer but sufficient trees|
+|learning_rate   |0.05       |0.1         |faster learning           |
+|max_depth       |3          |4           |deeper interactions       |
+|Test MSE        |4.80B      |4.72B       |lower error               |
+|Test MAE        |30,158     |29,766      |lower error               |
+|Test R²         |0.3559     |0.3666      |higher R²                 | 
 
 Top 5 Feature Importance (Baseline GB vs. Tuned GB)
 
@@ -237,8 +237,13 @@ Baseline Gradient Boosting results are included for comparison, but the final mo
 
 **Comparison with Random Forest**
 
-Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.3666 vs. 0.3310) and a lower MAE (29,766 vs. 32,400), indicating that it predicts typical income values more accurately and explains more of the overall variation. However, its MSE is higher (4.72B vs. 3.25B), suggesting that Gradient Boosting makes larger errors on a small number of very high‑income observations. This trade‑off is common in boosting models: they reduce average errors and improve explanatory power, but remain sensitive to extreme outliers due to the sequential nature of the learning process.
+| Metric | Random Forest  | **Gradient Boosting (Tuned)**  |Description  |
+|--------|----------------|--------------------------------|-------------|
+| MSE    | 3.25B          | 4.72B                          |higher error |
+| MAE    | 32,400         | 29,766                         |lower error  |
+| R²     | 0.3310         | 0.3666                         |higher R²    |
 
+Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it makes larger errors on a small number of very high‑income observations. However, it achieves a lower MAE, meaning that its typical prediction errors are smaller. In addition, Gradient Boosting attains a higher R², suggesting that it explains more of the overall variation in income. This pattern reflects a common trade‑off in boosting models: they reduce average errors and improve explanatory power but remain sensitive to extreme outliers due to their sequential learning structure.
 
 ## 4. Results and Model Comparison
 
@@ -292,6 +297,7 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
 * If time permits, add other 3 models
 
 **Feature Selection Rationale**
+
 To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced Gradient Boosting model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset and allow us to test the robustness of the Gradient Boosting results while simplifying the feature space.
 
 **Selected Top 20 Features:**
