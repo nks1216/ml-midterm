@@ -179,45 +179,58 @@ Gradient Boosting is an ensemble learning method that builds a sequence of weak 
 
 **Hyperparameter Concepts**
 
-The number of boosting stages determines how many incremental correction steps the model performs. The learning rate controls the contribution of each new tree, allowing the model to learn gradually rather than overreacting to residual errors. The maximum depth limits the complexity of each individual tree, ensuring that they remain weak learners and reducing the risk of early overfitting.
+The number of boosting stages determines how many incremental correction steps the model performs.
+
+The learning rate controls the contribution of each new tree, allowing the model to learn gradually rather than overreacting to residual errors. 
+
+The maximum depth limits the complexity of each individual tree, ensuring that they remain weak learners and reducing the risk of early overfitting.
 
 **Hyperparameter Tuning and Analysis Method**
 
-To improve model performance beyond the baseline configuration, we performed hyperparameter tuning using GridSearchCV.
+To improve model performance, we performed hyperparameter tuning using GridSearchCV. 
+
 The search space included:
 
-- n_estimators: [100, 200, 300, 400, 500]
-
+- n_estimators: [100, 200, 300, 400, 500] 
 - learning_rate: [0.01, 0.03, 0.05, 0.1]
-
 - max_depth: [2, 3, 4]
 
 The tuning was conducted with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to reduce the influence of extreme outliers.
 
 Grid search identified the following optimal hyperparameters:
 
+- n_estimators  = 200
 - learning_rate = 0.1
 - max_depth     = 4
-- n_estimators  = 200
 
-These values balance model complexity and generalization:
-a slightly deeper tree (depth 4) captures richer nonlinear interactions,
-a higher learning rate (0.1) accelerates convergence,
-and 200 boosting stages provide sufficient corrective steps without overfitting.
+These values balance model complexity and generalization by allowing deeper interactions while maintaining stable learning dynamics.
 
 **Model Performance**
+
 Using the tuned hyperparameters, the model achieved:
 
-- Test R²: 0.3666
 - Test MSE: 4.72B
 - Test MAE: 29,766
+- Test R²: 0.3666
 
-Compared to the baseline Gradient Boosting model (R² = 0.3559, MAE = 30,158 / when choosing n_estimators=300, learning_rate=0.05, max_depth=3,), the tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance.
+**Comparsion with Baseline Gradient Boosting**
 
+|Model         |Baseline GB|**Tuned GB**|Description                                                                |
+|--------------|-----------|------------|---------------------------------------------------------------------------|
+|n_estimators  |300        |200         |200 boosting stages provide sufficient corrective steps without overfitting|
+|learning_rate |0.05       |0.1         |a higher learning rate accelerates convergence                             |
+|max_depth     |3          |4           |a slightly deeper tree captures richer nonlinear interactions              |
+|Test MSE      |4.80B      |4.72B       |lower average error                                                        |
+|Test MAE      |30,158     |29,766      |lower average error                                                        |
+|Test R²       |0.3559     |0.3666      |higher explanatory power                                                   |
+
+The tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance. 
+
+Baseline Gradient Boosting results are included for comparison, but the final model used in this project is the tuned version described above.
 
 **Comparison with Random Forest**
 
-Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.3559 vs. 0.3310) and a lower MAE (30,158 vs. 32,400), indicating that it predicts typical income values more accurately and explains more of the overall variation. However, its MSE is higher (4.80B vs. 3.25B), suggesting that Gradient Boosting makes larger errors on a small number of very high‑income observations. This trade‑off is common in boosting models: they reduce average errors and improve explanatory power, but remain sensitive to extreme outliers due to the sequential nature of the learning process.
+Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.3666 vs. 0.3310) and a lower MAE (29,766 vs. 32,400), indicating that it predicts typical income values more accurately and explains more of the overall variation. However, its MSE is higher (4.72B vs. 3.25B), suggesting that Gradient Boosting makes larger errors on a small number of very high‑income observations. This trade‑off is common in boosting models: they reduce average errors and improve explanatory power, but remain sensitive to extreme outliers due to the sequential nature of the learning process.
 
 
 ## 4. Results and Model Comparison
