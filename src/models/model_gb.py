@@ -6,6 +6,7 @@ Train a Gradient Boosting model to predict individual income.
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
 
@@ -31,26 +32,44 @@ def load_data():
     return X_train, X_test, y_train, y_test
 
 
+from sklearn.model_selection import GridSearchCV
+
 def train_gradient_boosting(X_train, y_train):
     """
-    Train a Gradient Boosting Regressor using predefined hyperparameters.
-    Args:
-        X_train: Training features
-        y_train: Training target
+    Train Gradient Boosting with hyperparameter tuning using GridSearchCV.
     Returns:
-        Trained GradientBoostingRegressor model
+        Best estimator found by grid search
     """
 
-    # Initialize model with reasonable baseline hyperparameters
-    model = GradientBoostingRegressor(
-        n_estimators=300,      # Number of boosting stages
-        learning_rate=0.05,    # Shrinks contribution of each tree
-        max_depth=3,           # Depth of individual regression trees
-        random_state=42
+    # Base model
+    gbr = GradientBoostingRegressor(random_state=42)
+
+    # Hyperparameter search space
+    param_grid = {
+        'n_estimators': [100, 200, 300, 400, 500],
+        'learning_rate': [0.01, 0.03, 0.05, 0.1],
+        'max_depth': [2, 3, 4]
+    }
+
+    # Grid search
+    grid_search = GridSearchCV(
+        estimator=gbr,
+        param_grid=param_grid,
+        cv=3,
+        scoring='r2',
+        n_jobs=-1,
+        verbose=2
     )
 
-    model.fit(X_train, y_train)
-    return model
+    # Fit grid search
+    grid_search.fit(X_train, y_train)
+
+    print("\nBest parameters found:", grid_search.best_params_)
+    print("Best CV R²:", grid_search.best_score_)
+
+    # Return best model
+    return grid_search.best_estimator_
+
 
 
 def evaluate(model, X_test, y_test):
