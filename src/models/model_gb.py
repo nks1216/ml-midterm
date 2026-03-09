@@ -123,39 +123,47 @@ def plot_gb_actual_vs_predicted(
     model, X_test, y_test, out_path="reports/figures/gb_actual_vs_predicted.png"
 ):
     """
-    Plot actual vs predicted income values for Gradient Boosting (log scale version).
-    Args:
-        model: Trained Gradient Boosting pipeline
-        X_test: Test features
-        y_test: True test labels
-        out_path: Output file path
+    Plot actual vs predicted income values for Gradient Boosting (log scale),
+    matching the Random Forest visualization style.
     """
     preds = model.predict(X_test)
 
-    # Prevent negative predictions before log1p
+    # Clip negative predictions to zero before log transform
     preds = np.where(preds < 0, 0, preds)
 
-    # Apply log-scale transformation (log1p to handle zeros)
+    # Log-scale transformation
     actual = np.log1p(y_test)
     predicted = np.log1p(preds)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.scatter(actual, predicted, alpha=0.3, color="steelblue")
+    fig, ax = plt.subplots(figsize=(8, 8))
 
-    # Plot the perfect prediction line (y = x)
+    # Scatter plot 
+    ax.scatter(actual, predicted, alpha=0.3, s=10, color="steelblue")
+
+    # Perfect prediction line (with legend)
     min_val = min(actual.min(), predicted.min())
     max_val = max(actual.max(), predicted.max())
-    ax.plot([min_val, max_val], [min_val, max_val], "r--")
+    ax.plot([min_val, max_val], [min_val, max_val], "r--", label="Perfect fit")
 
+    # Add grid 
+    ax.grid(True, linestyle="--", alpha=0.5)
+
+    # Axis labels
     ax.set_xlabel("Actual INCTOT ($k, log scale)")
     ax.set_ylabel("Predicted INCTOT ($k, log scale)")
-    ax.set_title("Gradient Boosting — Actual vs Predicted (log scale)")
+
+    # Title with R² 
+    r2 = r2_score(y_test, preds)
+    ax.set_title(f"Actual vs Predicted (R² = {r2:.3f})")
+
+    # Show legend
+    ax.legend()
 
     plt.tight_layout()
     plt.savefig(out_path)
     plt.close()
 
-    print(f"Actual vs Predicted plot saved to {out_path}")
+    print(f"Gradient Boosting plot saved to {out_path}")
 
 
 def main():
