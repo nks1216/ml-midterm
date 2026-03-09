@@ -319,10 +319,10 @@ Using only the top 20 consensus features, the reduced Gradient Boosting model ac
 ### Ensemble Methods (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
 
-## 5. Repository Structure
 
-## 6. Reproducibility
-### 6.1. Setting up the Virtual Environment
+## 5. Reproducibility
+
+### 5.1. Setting up the Virtual Environment
 - Create a virtual environment:
 `python3 -m venv venv`
 
@@ -331,20 +331,25 @@ If time permits, apply ensemble techniques to refine predictions and compare the
 
 - Install all required packages:
 `pip install -r requirements.txt`
-### 6.2. Clone the repository  
+### 5.2. Clone the repository  
 ```
 git clone <repo-url>
 cd ml-midterm
 pip install -r requirements.txt
 ```
-### 6.3. Download the data 
+
+### 5.3. Download the data 
 Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00001.dat
 - data/codebook/cps_00001.xml
-### 4. Run the code  
-python src/data_clean.py
-python src/models/model_lr.py
-python src/models/model_en.py
-python src/models/model_rf.py
-python src/models/model_gb.py
-## 7. Future Improvements
+
+### 5.4 Run the code
+```  
+python3 src/data_clean.py
+python3 src/models/model_lr.py
+python3 src/models/model_en.py
+python3 src/models/model_rf.py
+python3 src/models/model_gb.py
+python3 src/models/model_gb_top20.py
+```
+## 6. Limitations and Future Improvements
