@@ -108,7 +108,7 @@ data/processed/
 ```
 
 
-## 3. Modeling Approach
+## 3. Modeling Approach and Individual Model Results
 
 ### 3.1. Linear Regression
 Baseline model for interpretability and comparison.
@@ -245,7 +245,7 @@ Baseline Gradient Boosting results are included for comparison, but the final mo
 
 Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it makes larger errors on a small number of very high‑income observations. However, it achieves a lower MAE, meaning that its typical prediction errors are smaller. In addition, Gradient Boosting attains a higher R², suggesting that it explains more of the overall variation in income. This pattern reflects a common trade‑off in boosting models: they reduce average errors and improve explanatory power but remain sensitive to extreme outliers due to their sequential learning structure.
 
-## 4. Results and Model Comparison
+## 4. Comparative Evaluation of Models
 
 #### MSE, MAE, and R² 
 
