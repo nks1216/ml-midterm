@@ -284,18 +284,22 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
 | **Elastic Net** | <!-- INSERT: reports/figures/gb_results.png (Panel 2) --> |
 | **Random Forest** | <img width="437" height="412" alt="image" src="https://github.com/user-attachments/assets/5b972691-2066-462a-802d-3bf358cc24c0" /> |
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
- |
 
 
-#### Top20 
 
-*Feature Selection Rationale*
+#### Reduced Methods (Gradient Boosting*)
+* If time permits, add other 3 models
 
-To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset. The reduced model allows us to test the robustness of the Gradient Boosting results while simplifying the feature space.
+**Feature Selection Rationale**
+To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced Gradient Boosting model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset and allow us to test the robustness of the Gradient Boosting results while simplifying the feature space.
 
-(RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR)
+**Selected Top 20 Features:**
+RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST,
+UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY,
+NUMEMPS, CLASSWKR.
 
-
+**Reduced Model Summary**
+Using only the top 20 consensus features, the reduced Gradient Boosting model achieves performance very close to the full 47‑feature model (R²: 0.3632 vs. 0.3666). Although the reduced model shows a slight decrease in predictive accuracy, the difference is minimal, indicating that most of the predictive signal is concentrated in a relatively small subset of variables. This confirms that the selected features capture the core determinants of income while substantially simplifying the feature space.
 
 
 #### Ensemble Methods (Bagging, Boosting, Stacking)
