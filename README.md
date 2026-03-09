@@ -227,7 +227,7 @@ Using the tuned hyperparameters, the model achieved:
 
 Top 5 Feature Importance (Baseline GB vs. Tuned GB)
 
-- Both models identify RETCONT, OCC2010, EDUC, and SEX as dominant predictors.
+- Both models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
 
 - The tuned model places **AGE** in the top 5 instead of **UHRSWORKKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
 
@@ -297,9 +297,9 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 
 
-### Reduced Methods (Gradient Boosting*)
+## 5. Reduced Feature Analysis (Gradient Boosting)
 
-* If time permits, add other 3 models
+Because Gradient Boosting emerged as the best-performing model in the full-feature comparison, we focus our reduced-specification analysis on this model to assess whether a more compact and interpretable feature set can preserve most of its predictive power.
 
 **Feature Selection Rationale**
 
@@ -307,40 +307,51 @@ To evaluate whether a smaller and more interpretable feature set can achieve com
 
 **Selected Top 20 Features:**
 
-RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST,
-UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY,
-NUMEMPS, CLASSWKR.
+RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR.
 
-**Reduced Model Summary**
+**Performance Comparison: Full vs. Reduced Gradient Boosting**
 
-Using only the top 20 consensus features, the reduced Gradient Boosting model achieves performance very close to the full 47‑feature model (R²: 0.3632 vs. 0.3666). Although the reduced model shows a slight decrease in predictive accuracy, the difference is minimal, indicating that most of the predictive signal is concentrated in a relatively small subset of variables. This confirms that the selected features capture the core determinants of income while substantially simplifying the feature space.
+| Metrics | Full GB       | **Reduced GB**   | Description                     | 
+|---------|---------------|------------------|---------------------------------|
+|         | (47 features) |**(20 features)** |                                 |
+| MSE     | 4,716,257,047 | 4,741,541,933    | slightly higher error           |
+| MAE     | 29,766        | 29,904           | slightly higher error           |
+| R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
 
 
-### Ensemble Methods (Bagging, Boosting, Stacking)
+Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space.
+
+
+**Brief Description of Selected Features:**  
+RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education level), SEX (sex), AGE (age), PAIDGH (employer-paid group health), FIRMSIZE (firm size), RELATE (relationship to household head), CBSASZ (metro area size), MARST (marital status), UHRSWORKT (usual weekly hours, all jobs), UHRSWORK1 (usual weekly hours, main job), IND (industry), FAMSIZE (family size), PENSION (pension coverage), EMPSTAT (employment status), WKSTAT (work status), HIMCAIDLY (Medicaid coverage), NUMEMPS (number of employers), 
+CLASSWKR (class of worker).
+
+
+## 6. Ensemble Extentions (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
 
 
-## 5. Reproducibility
+## 7. Reproducibility
 
-### 5.1. Setting up the Virtual Environment
+### 7.1. Setting up the Virtual Environment
 
 - Create a virtual environment: `python3 -m venv venv`
 - Activate the virtual environment: `source venv/bin/activate`
 - Install all required packages: `pip install -r requirements.txt`
 
-### 5.2. Clone the repository  
+### 7.2. Clone the repository  
 ```
 git clone <repo-url>
 cd ml-midterm
 pip install -r requirements.txt
 ```
 
-### 5.3. Download the data 
+### 7.3. Download the data 
 Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00001.dat
 - data/codebook/cps_00001.xml
 
-### 5.4 Run the code
+### 7.4 Run the code
 ```  
 python3 src/data_clean.py
 python3 src/models/model_lr.py
@@ -349,4 +360,4 @@ python3 src/models/model_rf.py
 python3 src/models/model_gb.py
 python3 src/models/model_gb_top20.py
 ```
-## 6. Limitations and Future Improvements
+## 8. Limitations and Future Improvements
