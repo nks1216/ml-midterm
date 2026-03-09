@@ -172,7 +172,26 @@ $$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
 ---
 
 ### 3.4. Gradient Boosting
-Boosting-based model that sequentially corrects prediction errors.
+
+**Model Concept**
+
+Gradient Boosting is an ensemble learning method that builds a sequence of weak learners—typically shallow decision trees—where each new tree is trained to correct the residual errors of the previous ones. By iteratively minimizing the loss function, the model captures nonlinear relationships and complex interactions between features. Unlike Random Forest, which averages many independent trees, Gradient Boosting improves sequentially and often achieves higher predictive accuracy, though it is more sensitive to hyperparameter choices.
+
+**Hyperparameter Concepts**
+
+The number of boosting stages determines how many incremental correction steps the model performs. The learning rate controls the contribution of each new tree, allowing the model to learn gradually rather than overreacting to residual errors. The maximum depth limits the complexity of each individual tree, ensuring that they remain weak learners and reducing the risk of early overfitting.
+
+**Analysis Method**
+For this personal income prediction task, we trained a Gradient Boosting Regressor using 300 boosting stages, a learning rate of 0.05, and a maximum depth of 3. The model was trained on the preprocessed CPS dataset (81,864 training observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to better visualize model performance and reduce the influence of extreme outliers.
+
+**Why These Hyperparameters Are Appropriate?**
+
+The chosen hyperparameters represent a balanced and widely used configuration for Gradient Boosting. A shallow tree depth of 3 helps prevent overfitting while still capturing meaningful nonlinear interactions. The learning rate of 0.05 provides stable incremental updates, and using 300 boosting stages compensates for the smaller step size. Although these values are not guaranteed to be globally optimal, they reflect a well-established trade-off between model complexity, stability, and predictive performance for high-variance, heavy‑tailed income data.
+
+**Comparison with Random Forest**
+
+Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.3559 vs. 0.3310) and a lower MAE (30,158 vs. 32,400), indicating that it predicts typical income values more accurately and explains more of the overall variation. However, its MSE is higher (4.80B vs. 3.25B), suggesting that Gradient Boosting makes larger errors on a small number of very high‑income observations. This trade‑off is common in boosting models: they reduce average errors and improve explanatory power, but remain sensitive to extreme outliers due to the sequential nature of the learning process.
+
 
 ## 4. Results and Model Comparison
 
