@@ -166,6 +166,34 @@ def plot_gb_actual_vs_predicted(
     print(f"Gradient Boosting plot saved to {out_path}")
 
 
+def plot_gb_feature_importance(
+    model, feature_names, top_k=20,
+    out_path="reports/figures/gb_feature_importance.png"
+):
+    """
+    Plot top-k feature importances for Gradient Boosting model.
+    Matches the style of en_feature_importance.png.
+    """
+    importances = model.feature_importances_
+    idx = np.argsort(importances)[::-1][:top_k]
+
+    top_features = feature_names[idx]
+    top_values = importances[idx]
+
+    plt.figure(figsize=(10, 8))
+    plt.barh(top_features, top_values, color="steelblue")
+    plt.gca().invert_yaxis()  # Highest importance at top
+
+    plt.xlabel("Feature Importance")
+    plt.title("Gradient Boosting — Top 20 Feature Importances")
+
+    plt.tight_layout()
+    plt.savefig(out_path)
+    plt.close()
+
+    print(f"Feature importance plot saved to {out_path}")
+
+
 def main():
     """Main execution function: load data, train model, evaluate, save results."""
 
@@ -191,6 +219,9 @@ def main():
 
     # Save results to png file
     plot_gb_actual_vs_predicted(model, X_test, y_test)
+
+    # Save feature importance plot
+    plot_gb_feature_importance(model, X_train.columns)
 
 
 # Run main() only when executed directly (not when imported)
