@@ -172,7 +172,73 @@ $$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
 ---
 
 ### 3.4. Gradient Boosting
-Boosting-based model that sequentially corrects prediction errors.
+
+**Model Concept**
+
+Gradient Boosting is an ensemble learning method that builds a sequence of weak learners—typically shallow decision trees—where each new tree is trained to correct the residual errors of the previous ones. By iteratively minimizing the loss function, the model captures nonlinear relationships and complex interactions between features. Unlike Random Forest, which averages many independent trees, Gradient Boosting improves sequentially and often achieves higher predictive accuracy, though it is more sensitive to hyperparameter choices.
+
+**Hyperparameter Concepts**
+
+- Number of boosting stages (n_estimators):  
+    Controls how many sequential correction steps the model performs.
+
+- Learning rate:  
+    Determines how much each new tree contributes to the final prediction, preventing the model from overreacting to residual errors.
+
+- Maximum depth:  
+    Limits the complexity of each individual tree, keeping them as weak learners and reducing early overfitting.
+
+**Hyperparameter Tuning and Analysis Method**
+
+To improve model performance, we performed hyperparameter tuning using GridSearchCV. The search space included:
+
+- n_estimators: [100, 200, 300, 400, 500] 
+- learning_rate: [0.01, 0.03, 0.05, 0.1]
+- max_depth: [2, 3, 4]
+
+The tuning was conducted with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to reduce the influence of extreme outliers.
+
+Grid search identified the following optimal hyperparameters:
+
+- n_estimators  = 200
+- learning_rate = 0.1
+- max_depth     = 4
+
+These values balance model complexity and generalization by allowing deeper interactions while maintaining stable learning dynamics.
+
+**Model Performance**
+
+Using the tuned hyperparameters, the model achieved:
+
+- Test MSE: 4.72B
+- Test MAE: 29,766
+- Test R²: 0.3666
+
+**Comparsion with Baseline Gradient Boosting**
+
+|Model         |Baseline GB|**Tuned GB**|Description               |
+|--------------|-----------|------------|--------------------------|
+|n_estimators  |300        |200         |fewer but sufficient trees|
+|learning_rate |0.05       |0.1         |faster learning           |
+|max_depth     |3          |4           |deeper interactions       |
+|Test MSE      |4.80B      |4.72B       |lower error               |
+|Test MAE      |30,158     |29,766      |lower error               |
+|Test R²       |0.3559     |0.3666      |higher R²                 | 
+
+Top 5 Feature Importance (Baseline GB vs. Tuned GB)
+
+- Both models identify RETCONT, OCC2010, EDUC, and SEX as dominant predictors.
+
+- The tuned model places **AGE** in the top 5 instead of **UHRSWORKKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
+
+The tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance. 
+
+Baseline Gradient Boosting results are included for comparison, but the final model used in this project is the tuned version described above.
+
+**Comparison with Random Forest**
+
+Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.3666 vs. 0.3310) and a lower MAE (29,766 vs. 32,400), indicating that it predicts typical income values more accurately and explains more of the overall variation. However, its MSE is higher (4.72B vs. 3.25B), suggesting that Gradient Boosting makes larger errors on a small number of very high‑income observations. This trade‑off is common in boosting models: they reduce average errors and improve explanatory power, but remain sensitive to extreme outliers due to the sequential nature of the learning process.
+
 
 ## 4. Results and Model Comparison
 
@@ -183,7 +249,7 @@ Boosting-based model that sequentially corrects prediction errors.
 | Linear Regression | 72,636        |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
-| Gradient Boosting | 4,795,937,263 |30,158  |0.3559 | 
+| Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
 
 #### Top 5 Feature Importances 
 
@@ -200,15 +266,15 @@ Boosting-based model that sequentially corrects prediction errors.
 |                       | 4 | SEX     | 6974.37  | Respondent's sex |
 |                       | 5 | AGE     | 4752.53  | Respondent's age |
 | **Random Forest**     | 1 | RETCONT   | 0.2553 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1168 | Occupation code (2010 classification) |
+|                       | 2 | OCC2010   | 0.1168 | Occupation (2010 classification) |
 |                       | 3 | AGE       | 0.0695 | Respondent’s age |
 |                       | 4 | EDUC      | 0.0568 | Educational attainment |
 |                       | 5 | IND       | 0.0493 | Industry |
-| **Gradient Boosting** | 1 | RETCONT   | 0.4620 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1456 | Occupation code (2010 classification) |
-|                       | 3 | EDUC      | 0.1340 | Educational attainment |
-|                       | 4 | SEX       | 0.0396 | Respondent’s sex |
-|                       | 5 | UHRSWORKT | 0.0283 | Hours usually worked per week |
+| **Gradient Boosting** | 1 | RETCONT   | 0.4377 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1436 | Occupation (2010 classification) |
+|                       | 3 | EDUC      | 0.1162 | Educational attainment |
+|                       | 4 | SEX       | 0.0340 | Respondent’s sex |
+|                       | 5 | AGE       | 0.0332 | Respondent's age |
 
 
 #### Actual vs Predicted 

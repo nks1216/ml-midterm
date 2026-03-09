@@ -1,29 +1,29 @@
 Gradient Boosting Results
 =========================
 
-R² score: 0.3559
-MSE: 4,795,937,263.36
-MAE: 30,158.57
+R² score: 0.3666
+MSE: 4,716,257,047.42
+MAE: 29,766.28
 
 Top 20 Feature Importances:
 ---------------------------
-  1. RETCONT              0.461967
-  2. OCC2010              0.145644
-  3. EDUC                 0.134039
-  4. SEX                  0.039571
-  5. UHRSWORKT            0.028340
-  6. PAIDGH               0.027510
-  7. AGE                  0.025270
-  8. UHRSWORK1            0.018081
-  9. IND                  0.015351
- 10. PENSION              0.014145
- 11. RELATE               0.013668
- 12. MARST                0.012346
- 13. EMPSTAT              0.008449
- 14. FIRMSIZE             0.006905
- 15. NUMEMPS              0.006210
- 16. CLASSWKR             0.005179
- 17. HIMCAIDLY            0.004806
- 18. WKSTAT               0.004153
- 19. CBSASZ               0.003507
- 20. PUBHOUS              0.003378
+  1. RETCONT              0.437665
+  2. OCC2010              0.143565
+  3. EDUC                 0.116167
+  4. SEX                  0.033969
+  5. AGE                  0.033230
+  6. UHRSWORKT            0.029892
+  7. IND                  0.024438
+  8. PAIDGH               0.024230
+  9. UHRSWORK1            0.017790
+ 10. PENSION              0.012521
+ 11. FIRMSIZE             0.010991
+ 12. RELATE               0.010697
+ 13. NUMEMPS              0.010679
+ 14. MARST                0.010408
+ 15. EMPSTAT              0.009538
+ 16. WKSTAT               0.006676
+ 17. CLASSWKR             0.006371
+ 18. CBSASZ               0.005990
+ 19. HIMCAIDLY            0.005589
+ 20. FAMSIZE              0.005490
