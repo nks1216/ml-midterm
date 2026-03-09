@@ -181,13 +181,39 @@ Gradient Boosting is an ensemble learning method that builds a sequence of weak 
 
 The number of boosting stages determines how many incremental correction steps the model performs. The learning rate controls the contribution of each new tree, allowing the model to learn gradually rather than overreacting to residual errors. The maximum depth limits the complexity of each individual tree, ensuring that they remain weak learners and reducing the risk of early overfitting.
 
-**Analysis Method**
+**Hyperparameter Tuning and Analysis Method**
 
-For this personal income prediction task, we trained a Gradient Boosting Regressor using 300 boosting stages, a learning rate of 0.05, and a maximum depth of 3. The model was trained on the preprocessed CPS dataset (81,864 training observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to better visualize model performance and reduce the influence of extreme outliers.
+To improve model performance beyond the baseline configuration, we performed hyperparameter tuning using GridSearchCV.
+The search space included:
 
-**Why These Hyperparameters Are Appropriate?**
+- n_estimators: [100, 200, 300, 400, 500]
 
-The chosen hyperparameters represent a balanced and widely used configuration for Gradient Boosting. A shallow tree depth of 3 helps prevent overfitting while still capturing meaningful nonlinear interactions. The learning rate of 0.05 provides stable incremental updates, and using 300 boosting stages compensates for the smaller step size. Although these values are not guaranteed to be globally optimal, they reflect a well-established trade-off between model complexity, stability, and predictive performance for high-variance, heavy‑tailed income data.
+- learning_rate: [0.01, 0.03, 0.05, 0.1]
+
+- max_depth: [2, 3, 4]
+
+The tuning was conducted with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to reduce the influence of extreme outliers.
+
+Grid search identified the following optimal hyperparameters:
+
+- learning_rate = 0.1
+- max_depth     = 4
+- n_estimators  = 200
+
+These values balance model complexity and generalization:
+a slightly deeper tree (depth 4) captures richer nonlinear interactions,
+a higher learning rate (0.1) accelerates convergence,
+and 200 boosting stages provide sufficient corrective steps without overfitting.
+
+**Model Performance**
+Using the tuned hyperparameters, the model achieved:
+
+- Test R²: 0.3666
+- Test MSE: 4.72B
+- Test MAE: 29,766
+
+Compared to the baseline Gradient Boosting model (R² = 0.3559, MAE = 30,158 / when choosing n_estimators=300, learning_rate=0.05, max_depth=3,), the tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance.
+
 
 **Comparison with Random Forest**
 
