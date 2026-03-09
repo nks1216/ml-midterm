@@ -256,6 +256,11 @@ Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it m
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
 | Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
 
+Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net is an extension of Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data. 
+
+In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based methods—achieve substantially better predictive performance. Random Forest reduces both MSE and MAE relative to the linear models, while Tuned Gradient Boosting achieves the lowest MAE and the highest R² overall. Its MSE remains higher than that of Random Forest, reflecting greater sensitivity to extreme high‑income outliers, a common characteristic of boosting methods.
+
+
 #### Top 5 Feature Importances 
 
 | Model | Rank | Feature | Importance | Description |
