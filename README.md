@@ -16,7 +16,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 - **Extract ID**: `cps_00001`
 - **File format**: Fixed-width ASCII (`.dat`), parsed via DDI XML codebook (`.xml`)
 - **Total variables in extract**: 313
-- **Selected variables for analysis**: 43 features + 1 target
+- **Selected variables for analysis**: 47 features + 1 target
 - **Source**: [IPUMS CPS](https://cps.ipums.org/cps/)
 
 ---
@@ -246,7 +246,7 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
 
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
-| Linear Regression | 72,636        |34,199  |0.2914 |
+| Linear Regression | 5,276,020,877 |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
 | Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
@@ -330,10 +330,15 @@ pip install -r requirements.txt
 Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00001.dat
 - data/codebook/cps_00001.xml
-### 4. Run the code  
+### 6.4. Run the code
+
+```bash
 python src/data_clean.py
-python src/models/model_lr.py
+python src/models/model_linear.py
 python src/models/model_en.py
 python src/models/model_rf.py
 python src/models/model_gb.py
+python src/models/model_gb_top20.py
+```
+
 ## 7. Future Improvements
