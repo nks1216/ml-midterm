@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction can inform labor market analysis, support the design of targeted workforce programs, and shed light on patterns of inequality and economic mobility at the individual level.
+This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction supports labor market analysis, informs targeted workforce programs, and sheds light on patterns of inequality and economic mobility at the individual level, making this prediction problem practically relevant for real‑world economic decision‑making.
 
 To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. We also conduct a brief reduced-feature analysis using the top 20 consensus predictors to examine whether a more compact Gradient Boosting model can retain most of the predictive signal. Finally, we explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
 
@@ -107,14 +107,28 @@ data/processed/
 └── y_test.csv
 ```
 
+### 2.4. Data Limitations
+
+- **Self‑reported income** is subject to measurement error, which may introduce noise into the target variable.
+
+- **Top‑coded high incomes** limit the model’s ability to learn extreme values and reduce variation in the upper tail.
+
+- **Occupation and industry codes** are high‑dimensional and do not capture within‑category heterogeneity (e.g., experience, job role, firm type).
+
+- The dataset **does not include wealth, assets, or detailed job characteristics**, all of which are important determinants of income but unavailable in CPS microdata.
+
 
 ## 3. Modeling Approach and Individual Model Results
 
 ### 3.1. Linear Regression
+
 Baseline model for interpretability and comparison.
 
 ### 3.2. Elastic Net (New Model)
-Regularized linear model combining L1 and L2 penalties to improve stability and handle correlated predictors.
+
+This model serves as our required "new technique" not covered in class.
+
+Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predictors more effectively than Lasso or Ridge alone. It provides a more stable coefficient structure and performs feature shrinkage, which is useful for high‑dimensional socioeconomic data.
 
 ### 3.3. Random Forest
 
@@ -372,4 +386,24 @@ python3 src/models/model_rf.py
 python3 src/models/model_gb.py
 python3 src/models/model_gb_top20.py
 ```
+For convenience, individual model scripts are provided.
+
 ## 8. Limitations and Future Improvements
+
+**Modeling Limitations**
+
+- **Linear models underfit** because they cannot capture nonlinear interactions among socioeconomic variables.
+
+- **Tree‑based models cannot extrapolate** beyond the range of observed incomes, causing predictions for unusually high values to flatten out.
+
+- **Gradient Boosting is sensitive** to outliers and hyperparameter choices, requiring careful tuning and validation.
+
+- **All models are predictive rather than causal**, meaning the results cannot be interpreted as estimating the causal effect of any feature on income.
+
+## 9. Collaboration and Workflow
+
+- All team members worked through GitHub Issues and feature branches, following a branch‑per‑issue workflow.
+- Each member opened pull requests for their work and merged them after review and testing.
+- The repository contains more than 30 commits across multiple contributors.
+- All code and documentation were merged into the main branch before submission.
+
