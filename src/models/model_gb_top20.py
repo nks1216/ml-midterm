@@ -9,6 +9,7 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
+from matplotlib.ticker import LogFormatterMathtext
 
 
 def load_data():
@@ -81,8 +82,7 @@ def train_gradient_boosting(X_train, y_train):
     print("Best CV R²:", grid_search.best_score_)
 
     # Return best model
-    return grid_search.best_estimator_
-
+    return grid_search.best_estimator_, grid_search.best_params_
 
 
 def evaluate(model, X_test, y_test):
@@ -131,7 +131,8 @@ def print_feature_importance(model, feature_names, top_k=20):
         print(f"{rank:3d}. {feature_names[i]:20s} {importances[i]:.6f}")
 
 
-def save_results(r2, mse, mae, feature_names, importances, top_k=20, out_path="results_gb_top20.txt"):
+def save_results(r2, mse, mae, feature_names, importances, best_params,
+                 top_k=20, out_path="results_gb_top20.txt"):
     """Save model evaluation metrics and top-k feature importances to a text file."""
 
     idx = np.argsort(importances)[::-1][:top_k]
@@ -139,6 +140,12 @@ def save_results(r2, mse, mae, feature_names, importances, top_k=20, out_path="r
     with open(out_path, "w") as f:
         f.write("Gradient Boosting Results\n")
         f.write("=========================\n\n")
+
+        f.write("Best Parameters:\n")
+        for key, value in best_params.items():
+            f.write(f"  {key}: {value}\n")
+        f.write("\n")
+
         f.write(f"R² score: {r2:.4f}\n")
         f.write(f"MSE: {mse:,.2f}\n")
         f.write(f"MAE: {mae:,.2f}\n\n")
@@ -154,45 +161,40 @@ def save_results(r2, mse, mae, feature_names, importances, top_k=20, out_path="r
 def plot_gb_actual_vs_predicted(
     model, X_test, y_test, out_path="reports/figures/gb_actual_vs_predicted_top20.png"
 ):
-    """
-    Plot actual vs predicted income values for Gradient Boosting (log scale),
-    matching the Random Forest visualization style.
-    """
     preds = model.predict(X_test)
 
-    # Clip negative predictions to zero before log transform
-    preds = np.where(preds < 0, 0, preds)
-
-    # Log-scale transformation
-    actual = np.log1p(y_test)
-    predicted = np.log1p(preds)
+    # Clip negatives (log scale cannot handle <= 0)
+    actual = np.clip(y_test, 1e-1, None)
+    predicted = np.clip(preds, 1e-1, None)
 
     fig, ax = plt.subplots(figsize=(8, 8))
 
-    # Scatter plot 
-    ax.scatter(actual, predicted, alpha=0.3, s=10, color="steelblue")
+    ax.scatter(actual, predicted, alpha=0.25, s=8, color="steelblue")
 
-    # Perfect prediction line (with legend)
+    # Set log10 scale
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+
+    # Perfect prediction line
     min_val = min(actual.min(), predicted.min())
     max_val = max(actual.max(), predicted.max())
     ax.plot([min_val, max_val], [min_val, max_val], "r--", label="Perfect fit")
 
-    # Add grid 
-    ax.grid(True, linestyle="--", alpha=0.5)
+    # Log10 tick formatting
+    ax.xaxis.set_major_formatter(LogFormatterMathtext(base=10))
+    ax.yaxis.set_major_formatter(LogFormatterMathtext(base=10))
 
-    # Axis labels
-    ax.set_xlabel("Actual INCTOT ($k, log scale)")
-    ax.set_ylabel("Predicted INCTOT ($k, log scale)")
+    ax.grid(True, which="major", linestyle="--", alpha=0.6)
 
-    # Title with R² 
+    ax.set_xlabel("Actual INCTOT ($k, log10 scale)")
+    ax.set_ylabel("Predicted INCTOT ($k, log10 scale)")
+
     r2 = r2_score(y_test, preds)
     ax.set_title(f"Actual vs Predicted (R² = {r2:.3f})")
-
-    # Show legend
     ax.legend()
 
     plt.tight_layout()
-    plt.savefig(out_path)
+    plt.savefig(out_path, dpi=300)
     plt.close()
 
     print(f"Gradient Boosting plot saved to {out_path}")
@@ -231,7 +233,7 @@ def main():
 
     X_train, X_test, y_train, y_test = load_data()
 
-    model = train_gradient_boosting(X_train, y_train)
+    model, best_params = train_gradient_boosting(X_train, y_train)
 
     # Get evaluation results
     r2, mse, mae = evaluate(model, X_test, y_test)
@@ -246,6 +248,7 @@ def main():
         mae=mae,
         feature_names=X_train.columns,
         importances=model.feature_importances_,
+        best_params=best_params,
         out_path="reports/results/results_gb_top20.txt"
     )
 
