@@ -1,11 +1,11 @@
-# Predicting Individual Income Using Machine Learning Models
+# Predicting Personal Income Using Machine Learning Models
 
 ## 1. Project Overview
 
-This project uses CPS microdata to predict total individual income and to identify the key socioeconomic factors associated with income variation. Understanding the determinants of household income has important policy implications: accurate income prediction can support targeted social programs, inform tax and welfare design, and shed light on patterns of inequality and economic mobility.
+This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction supports labor market analysis, informs targeted workforce programs, and sheds light on patterns of inequality and economic mobility at the individual level, making this prediction problem practically relevant for real‑world economic decision‑making.
 
-To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. We also explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal is to identify 
-the most effective modeling approach and provide a clear, reproducible workflow.
+To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. We also conduct a brief reduced-feature analysis using the top 20 consensus predictors to examine whether a more compact Gradient Boosting model can retain most of the predictive signal. Finally, we explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
+
 
 ## 2. Dataset Description
 
@@ -16,7 +16,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 - **Extract ID**: `cps_00001`
 - **File format**: Fixed-width ASCII (`.dat`), parsed via DDI XML codebook (`.xml`)
 - **Total variables in extract**: 313
-- **Selected variables for analysis**: 47 features + 1 target
+- **Selected variables for analysis**: 43 features + 1 target
 - **Source**: [IPUMS CPS](https://cps.ipums.org/cps/)
 
 ---
@@ -107,14 +107,28 @@ data/processed/
 └── y_test.csv
 ```
 
+### 2.4. Data Limitations
 
-## 3. Modeling Approach
+- **Self‑reported income** is subject to measurement error, which may introduce noise into the target variable.
+
+- **Top‑coded high incomes** limit the model’s ability to learn extreme values and reduce variation in the upper tail.
+
+- **Occupation and industry codes** are high‑dimensional and do not capture within‑category heterogeneity (e.g., experience, job role, firm type).
+
+- The dataset **does not include wealth, assets, or detailed job characteristics**, all of which are important determinants of income but unavailable in CPS microdata.
+
+
+## 3. Modeling Approach and Individual Model Results
 
 ### 3.1. Linear Regression
+
 Baseline model for interpretability and comparison.
 
 ### 3.2. Elastic Net (New Model)
-Regularized linear model combining L1 and L2 penalties to improve stability and handle correlated predictors.
+
+This model serves as our required "new technique" not covered in class.
+
+Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predictors more effectively than Lasso or Ridge alone. It provides a more stable coefficient structure and performs feature shrinkage, which is useful for high‑dimensional socioeconomic data.
 
 ### 3.3. Random Forest
 
@@ -175,34 +189,46 @@ $$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
 
 **Model Concept**
 
-Gradient Boosting is an ensemble learning method that builds a sequence of weak learners—typically shallow decision trees—where each new tree is trained to correct the residual errors of the previous ones. By iteratively minimizing the loss function, the model captures nonlinear relationships and complex interactions between features. Unlike Random Forest, which averages many independent trees, Gradient Boosting improves sequentially and often achieves higher predictive accuracy, though it is more sensitive to hyperparameter choices.
+Gradient Boosting builds an ensemble of shallow decision trees sequentially, where each new tree is trained to correct the residual errors of the previous ones. This iterative structure allows the model to capture nonlinear relationships and complex interactions. Unlike Random Forest—which averages many independent trees—Gradient Boosting improves stage‑by‑stage and is more sensitive to hyperparameter choices.
 
-**Hyperparameter Concepts**
+$$
+\hat{y}(x) = F_M(x) = F_0(x) + \sum_{m=1}^{M} \nu \cdot h_m(x)
+$$
 
-- Number of boosting stages (n_estimators):  
-    Controls how many sequential correction steps the model performs.
+Where:
 
-- Learning rate:  
-    Determines how much each new tree contributes to the final prediction, preventing the model from overreacting to residual errors.
+- $F_0(x)$: initial prediction (typically the mean of the target variable)
+- $h_m(x)$: the weak learner (shallow tree) fitted at stage $m$
+- $\nu$: learning rate controlling the contribution of each tree
+- $M$: number of boosting stages (equivalent to `n_estimators`)
 
-- Maximum depth:  
-    Limits the complexity of each individual tree, keeping them as weak learners and reducing early overfitting.
+**Model Configuration**
 
-**Hyperparameter Tuning and Analysis Method**
+| Hyperparameter | Description                                            |
+|----------------| -------------------------------------------------------|
+| n_estimator    | Number of boosting stages; controls how many sequential correction steps the model performs.                       |
+| learning_rate  | Scales each tree’s contribution to the final prediction, preventing the model from overreacting to residual errors.|
+| max_depth      | Maximum depth of each individual tree; keeps trees as weak learners and reduces early overfitting.                 |
 
-To improve model performance, we performed hyperparameter tuning using GridSearchCV. The search space included:
+**Hyperparameter Tuning (GridSearchCV)**
 
-- n_estimators: [100, 200, 300, 400, 500] 
-- learning_rate: [0.01, 0.03, 0.05, 0.1]
-- max_depth: [2, 3, 4]
+To improve model performance, we performed hyperparameter tuning using `GridSearchCV` with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a **log‑transformed** scale to reduce the influence of extreme outliers.
 
-The tuning was conducted with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to reduce the influence of extreme outliers.
+*Search Space*
 
-Grid search identified the following optimal hyperparameters:
+| Hyperparameter | Value Tested              |
+|----------------|---------------------------|
+| n_estimators   | 100, 200, 300, 400, 500   | 
+| learning_rate  | 0.01, 0.03, 0.05, 0.1     |
+| max_depth      | 2, 3, 4                   |
 
-- n_estimators  = 200
-- learning_rate = 0.1
-- max_depth     = 4
+*Optimal Hyperparameter*
+
+| Hyperparameter | Best Value   |
+|----------------|--------------|
+| n_estimators   | 200          |
+| learning_rate  | 0.1          |
+| max_depth      | 4            |
 
 These values balance model complexity and generalization by allowing deeper interactions while maintaining stable learning dynamics.
 
@@ -216,18 +242,18 @@ Using the tuned hyperparameters, the model achieved:
 
 **Comparsion with Baseline Gradient Boosting**
 
-|Model         |Baseline GB|**Tuned GB**|Description               |
-|--------------|-----------|------------|--------------------------|
-|n_estimators  |300        |200         |fewer but sufficient trees|
-|learning_rate |0.05       |0.1         |faster learning           |
-|max_depth     |3          |4           |deeper interactions       |
-|Test MSE      |4.80B      |4.72B       |lower error               |
-|Test MAE      |30,158     |29,766      |lower error               |
-|Test R²       |0.3559     |0.3666      |higher R²                 | 
+|Parameter/Metric|Baseline GB|**Tuned GB**|Description               |
+|----------------|-----------|------------|--------------------------|
+|n_estimators    |300        |200         |fewer but sufficient trees|
+|learning_rate   |0.05       |0.1         |faster learning           |
+|max_depth       |3          |4           |deeper interactions       |
+|Test MSE        |4.80B      |4.72B       |lower error               |
+|Test MAE        |30,158     |29,766      |lower error               |
+|Test R²         |0.3559     |0.3666      |higher R²                 | 
 
 Top 5 Feature Importance (Baseline GB vs. Tuned GB)
 
-- Both models identify RETCONT, OCC2010, EDUC, and SEX as dominant predictors.
+- Both models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
 
 - The tuned model places **AGE** in the top 5 instead of **UHRSWORKKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
 
@@ -237,19 +263,29 @@ Baseline Gradient Boosting results are included for comparison, but the final mo
 
 **Comparison with Random Forest**
 
-Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.3666 vs. 0.3310) and a lower MAE (29,766 vs. 32,400), indicating that it predicts typical income values more accurately and explains more of the overall variation. However, its MSE is higher (4.72B vs. 3.25B), suggesting that Gradient Boosting makes larger errors on a small number of very high‑income observations. This trade‑off is common in boosting models: they reduce average errors and improve explanatory power, but remain sensitive to extreme outliers due to the sequential nature of the learning process.
+| Metric | Random Forest  | **Tuned GB**  |Description  |
+|--------|----------------|---------------|-------------|
+| MSE    | 3.25B          | 4.72B         |higher error |
+| MAE    | 32,400         | 29,766        |lower error  |
+| R²     | 0.3310         | 0.3666        |higher R²    |
 
+Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it makes larger errors on a small number of very high‑income observations. However, it achieves a lower MAE, meaning that its typical prediction errors are smaller. In addition, Gradient Boosting attains a higher R², suggesting that it explains more of the overall variation in income. This pattern reflects a common trade‑off in boosting models: they reduce average errors and improve explanatory power but remain sensitive to extreme outliers due to their sequential learning structure.
 
-## 4. Results and Model Comparison
+## 4. Comparative Evaluation of Models
 
 #### MSE, MAE, and R² 
 
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
-| Linear Regression | 5,276,020,877 |34,199  |0.2914 |
+| Linear Regression | 72,636        |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
 | Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
+
+Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net is an extension of Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data. 
+
+In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based methods—achieve substantially better predictive performance. Random Forest reduces both MSE and MAE relative to the linear models, while Tuned Gradient Boosting achieves the lowest MAE and the highest R² overall. Its MSE remains higher than that of Random Forest, reflecting greater sensitivity to extreme high‑income outliers, a common characteristic of boosting methods.
+
 
 #### Top 5 Feature Importances 
 
@@ -287,58 +323,87 @@ Compared to the Random Forest model, Gradient Boosting achieves a higher R² (0.
 
 
 
-### Reduced Methods (Gradient Boosting*)
+## 5. Reduced Feature Analysis (Gradient Boosting)
 
-* If time permits, add other 3 models
+Because Gradient Boosting emerged as the best-performing model in the full-feature comparison, we focus our reduced-specification analysis on this model to assess whether a more compact and interpretable feature set can preserve most of its predictive power.
 
 **Feature Selection Rationale**
+
 To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced Gradient Boosting model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset and allow us to test the robustness of the Gradient Boosting results while simplifying the feature space.
 
 **Selected Top 20 Features:**
 
-RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST,
-UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY,
-NUMEMPS, CLASSWKR.
+RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR.
 
-**Reduced Model Summary**
+**Performance Comparison: Full vs. Reduced Gradient Boosting**
 
-Using only the top 20 consensus features, the reduced Gradient Boosting model achieves performance very close to the full 47‑feature model (R²: 0.3632 vs. 0.3666). Although the reduced model shows a slight decrease in predictive accuracy, the difference is minimal, indicating that most of the predictive signal is concentrated in a relatively small subset of variables. This confirms that the selected features capture the core determinants of income while substantially simplifying the feature space.
+| Metrics | Full GB       | **Reduced GB**   | Description                     | 
+|---------|---------------|------------------|---------------------------------|
+|         | (47 features) |**(20 features)** |                                 |
+| MSE     | 4,716,257,047 | 4,741,541,933    | slightly higher error           |
+| MAE     | 29,766        | 29,904           | slightly higher error           |
+| R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
 
 
-### Ensemble Methods (Bagging, Boosting, Stacking)
+Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space. This also serves as a simple robustness check, showing that the Gradient Boosting model remains stable even when the feature space is substantially reduced.
+
+
+**Brief Description of Selected Features:**  
+RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education level), SEX (sex), AGE (age), PAIDGH (employer-paid group health), FIRMSIZE (firm size), RELATE (relationship to household head), CBSASZ (metro area size), MARST (marital status), UHRSWORKT (usual weekly hours, all jobs), UHRSWORK1 (usual weekly hours, main job), IND (industry), FAMSIZE (family size), PENSION (pension coverage), EMPSTAT (employment status), WKSTAT (work status), HIMCAIDLY (Medicaid coverage), NUMEMPS (number of employers), 
+CLASSWKR (class of worker).
+
+
+## 6. Ensemble Extentions (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
 
-## 5. Repository Structure
 
-## 6. Reproducibility
-### 6.1. Setting up the Virtual Environment
-- Create a virtual environment:
-`python3 -m venv venv`
+## 7. Reproducibility
 
-- Activate the virtual environment:
-`source venv/bin/activate`
+### 7.1. Setting up the Virtual Environment
 
-- Install all required packages:
-`pip install -r requirements.txt`
-### 6.2. Clone the repository  
+- Create a virtual environment: `python3 -m venv venv`
+- Activate the virtual environment: `source venv/bin/activate`
+- Install all required packages: `pip install -r requirements.txt`
+
+### 7.2. Clone the repository  
 ```
 git clone <repo-url>
 cd ml-midterm
 pip install -r requirements.txt
 ```
-### 6.3. Download the data 
-Via Google Drive(https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
+
+### 7.3. Download the data 
+Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00001.dat
 - data/codebook/cps_00001.xml
-### 6.4. Run the code
 
-```bash
-python src/data_clean.py
-python src/models/model_linear.py
-python src/models/model_en.py
-python src/models/model_rf.py
-python src/models/model_gb.py
-python src/models/model_gb_top20.py
+### 7.4 Run the code
+```  
+python3 src/data_clean.py
+python3 src/models/model_lr.py
+python3 src/models/model_en.py
+python3 src/models/model_rf.py
+python3 src/models/model_gb.py
+python3 src/models/model_gb_top20.py
 ```
+For convenience, individual model scripts are provided.
 
-## 7. Future Improvements
+## 8. Limitations and Future Improvements
+
+**Modeling Limitations**
+
+- **Linear models underfit** because they cannot capture nonlinear interactions among socioeconomic variables.
+
+- **Tree‑based models cannot extrapolate** beyond the range of observed incomes, causing predictions for unusually high values to flatten out.
+
+- **Gradient Boosting is sensitive** to outliers and hyperparameter choices, requiring careful tuning and validation.
+
+- **All models are predictive rather than causal**, meaning the results cannot be interpreted as estimating the causal effect of any feature on income.
+
+## 9. Collaboration and Workflow
+
+- All team members worked through GitHub Issues and feature branches, following a branch‑per‑issue workflow.
+- Each member opened pull requests for their work and merged them after review and testing.
+- The repository contains more than 30 commits across multiple contributors.
+- All code and documentation were merged into the main branch before submission.
+
