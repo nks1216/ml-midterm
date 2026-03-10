@@ -175,34 +175,35 @@ $$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
 
 **Model Concept**
 
-Gradient Boosting is an ensemble learning method that builds a sequence of weak learners—typically shallow decision trees—where each new tree is trained to correct the residual errors of the previous ones. By iteratively minimizing the loss function, the model captures nonlinear relationships and complex interactions between features. Unlike Random Forest, which averages many independent trees, Gradient Boosting improves sequentially and often achieves higher predictive accuracy, though it is more sensitive to hyperparameter choices.
+Gradient Boosting builds an ensemble of shallow decision trees sequentially, where each new tree is trained to correct the residual errors of the previous ones. This iterative structure allows the model to capture nonlinear relationships and complex interactions. Unlike Random Forest—which averages many independent trees—Gradient Boosting improves stage‑by‑stage and is more sensitive to hyperparameter choices.
 
-**Hyperparameter Concepts**
+**Model Configuration**
 
-- Number of boosting stages (n_estimators):  
-    Controls how many sequential correction steps the model performs.
+| Hyperparameter | Description                                            |
+|----------------| -------------------------------------------------------|
+| n_estimator    | Number of boosting stages; controls how many sequential correction steps the model performs.                       |
+| learning_rate  | Scales each tree’s contribution to the final prediction, preventing the model from overreacting to residual errors.|
+| max_depth      | Maximum depth of each individual tree; keeps trees as weak learners and reduces early overfitting.                 |
 
-- Learning rate:  
-    Determines how much each new tree contributes to the final prediction, preventing the model from overreacting to residual errors.
+**Hyperparameter Tuning (GridSearchCV)**
 
-- Maximum depth:  
-    Limits the complexity of each individual tree, keeping them as weak learners and reducing early overfitting.
+To improve model performance, we performed hyperparameter tuning using `GridSearchCV` with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a **log‑transformed** scale to reduce the influence of extreme outliers.
 
-**Hyperparameter Tuning and Analysis Method**
+*Search Space*
 
-To improve model performance, we performed hyperparameter tuning using GridSearchCV. The search space included:
+| Hyperparameter | Value Tested              |
+|----------------|---------------------------|
+| n_estimators   | 100, 200, 300, 400, 500   | 
+| learning_rate  | 0.01, 0.03, 0.05, 0.1     |
+| max_depth      | 2, 3, 4                   |
 
-- n_estimators: [100, 200, 300, 400, 500] 
-- learning_rate: [0.01, 0.03, 0.05, 0.1]
-- max_depth: [2, 3, 4]
+*Optimal Hyperparameter*
 
-The tuning was conducted with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a log-transformed scale to reduce the influence of extreme outliers.
-
-Grid search identified the following optimal hyperparameters:
-
-- n_estimators  = 200
-- learning_rate = 0.1
-- max_depth     = 4
+| Hyperparameter | Best Value   |
+|----------------|--------------|
+| n_estimators   | 200          |
+| learning_rate  | 0.1          |
+| max_depth      | 4            |
 
 These values balance model complexity and generalization by allowing deeper interactions while maintaining stable learning dynamics.
 
