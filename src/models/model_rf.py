@@ -3,7 +3,9 @@ IPUMS CPS Feature Importance Modeling (Random Forest)
 
 Reads preprocessed train/test splits from data/processed/ and runs a
 Random Forest model to identify variables influencing INCTOT.
-Produces a three-panel diagnostic figure saved to reports/figures/rf_results.png.
+Produces two diagnostic figures (rf_feature_importance.png, rf_actual_vs_predicted.png)
+saved to reports/figures/
+and a results summary text file saved to reports/results/results_rf.txt.
 
 Prerequisite: run src/data_clean.py first to generate the CSV splits.
 """
@@ -79,73 +81,108 @@ def print_top_features(importances, n=20):
         print(f"  {rank:>2}. {name:<20s} {score:.6f}")
 
 
-def plot_results(importances, y_test, y_pred, r2_score, mse=None, mae=None, n=20, save_dir=OUTPUTS_DIR):
-    """Generate and save a three-panel diagnostic figure.
-
-    Panel 1 — Feature Importance: top N features ranked by mean impurity decrease.
-    Panel 2 — Actual vs Predicted: scatter of true vs predicted INCTOT values.
-    Panel 3 — Residual Plot: prediction error across predicted values.
+def plot_feature_importance(importances, n=20, save_dir=OUTPUTS_DIR):
+    """Generate and save feature importance bar chart.
 
     Args:
         importances: Series of feature importances sorted descending.
-        y_test: True target values (test set).
-        y_pred: Predicted target values (test set).
-        r2_score: Test R² score.
-        mse: Mean Squared Error (optional, shown in figure subtitle).
-        mae: Mean Absolute Error (optional, shown in figure subtitle).
-        n: Number of top features to display in panel 1.
+        n: Number of top features to display.
         save_dir: Directory to save the output figure.
     """
     sns.set_theme(style="whitegrid", palette="muted", font_scale=1.0)
-    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+    fig, ax = plt.subplots(figsize=(8, 6))
 
-    subtitle = f"R² = {r2_score:.4f}"
-    if mse is not None:
-        subtitle += f"  |  RMSE = ${mse ** 0.5:,.0f}"
-    if mae is not None:
-        subtitle += f"  |  MAE = ${mae:,.0f}"
-    fig.suptitle(f"Random Forest — INCTOT Diagnostic\n{subtitle}", fontsize=13, fontweight="bold", y=1.02)
-
-    # --- Panel 1: Feature Importance ---
-    top = importances.head(n).sort_values()
-    sns.barplot(x=top.values, y=top.index, ax=axes[0], color="steelblue")
-    axes[0].set_title(f"Top {n} Feature Importances")
-    axes[0].set_xlabel("Mean Impurity Decrease")
-    axes[0].set_ylabel("")
-
-    # --- Panel 2: Actual vs Predicted (log scale) ---
-    # Clip to 1 to avoid log(0); values already filtered >= 1 in data_clean.py
-    y_test_k = np.clip(y_test / 1_000, 0.1, None)
-    y_pred_k = np.clip(y_pred / 1_000, 0.1, None)
-    lim_low = min(y_test_k.min(), y_pred_k.min()) * 0.9
-    lim_high = max(y_test_k.max(), y_pred_k.max()) * 1.1
-    sns.scatterplot(x=y_test_k, y=y_pred_k, ax=axes[1], alpha=0.15, s=10, color="steelblue")
-    axes[1].plot([lim_low, lim_high], [lim_low, lim_high],
-                 color="tomato", linewidth=1.2, linestyle="--", label="Perfect fit")
-    axes[1].set_xscale("log")
-    axes[1].set_yscale("log")
-    axes[1].set_xlim(lim_low, lim_high)
-    axes[1].set_ylim(lim_low, lim_high)
-    axes[1].set_title(f"Actual vs Predicted  (R² = {r2_score:.3f})")
-    axes[1].set_xlabel("Actual INCTOT ($k, log scale)")
-    axes[1].set_ylabel("Predicted INCTOT ($k, log scale)")
-    axes[1].legend(fontsize=9)
-
-    # --- Panel 3: Residuals (log-scale x-axis) ---
-    residuals = y_test_k - y_pred_k
-    sns.scatterplot(x=y_pred_k, y=residuals, ax=axes[2], alpha=0.15, s=10, color="steelblue")
-    axes[2].axhline(0, color="tomato", linewidth=1.2, linestyle="--")
-    axes[2].set_xscale("log")
-    axes[2].set_title("Residual Plot")
-    axes[2].set_xlabel("Predicted INCTOT ($k, log scale)")
-    axes[2].set_ylabel("Residual ($k)")
+    top = importances.head(n)
+    sns.barplot(x=top.values, y=top.index, ax=ax, color="steelblue")
+    ax.set_title(f"Random Forest — Top {n} Feature Importances", fontsize=13, fontweight="bold")
+    ax.set_xlabel("Mean Impurity Decrease")
+    ax.set_ylabel("")
 
     plt.tight_layout()
     save_dir.mkdir(parents=True, exist_ok=True)
-    out_path = save_dir / "rf_results.png"
+    out_path = save_dir / "rf_feature_importance.png"
     fig.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
     print(f"\n  Figure saved → {out_path.relative_to(PROJECT_ROOT)}")
+
+
+def plot_actual_vs_predicted(y_test, y_pred, r2_score, mse=None, mae=None, save_dir=OUTPUTS_DIR):
+    """Generate and save actual vs predicted scatter plot.
+
+    Args:
+        y_test: True target values (test set).
+        y_pred: Predicted target values (test set).
+        r2_score: Test R² score.
+        mse: Mean Squared Error (optional, shown in subtitle).
+        mae: Mean Absolute Error (optional, shown in subtitle).
+        save_dir: Directory to save the output figure.
+    """
+    sns.set_theme(style="whitegrid", palette="muted", font_scale=1.0)
+    fig, ax = plt.subplots(figsize=(8, 7))
+
+    subtitle = f"R² = {r2_score:.4f}"
+    ax.set_title(f"Actual vs Predicted\n{subtitle}", fontsize=13, fontweight="bold")
+
+    # Clip to 1 ($1k) so log scale starts at 10^0
+    y_test_k = np.clip(y_test / 1_000, 1.0, None)
+    y_pred_k = np.clip(y_pred / 1_000, 1.0, None)
+    lim_high = max(y_test_k.max(), y_pred_k.max()) * 1.1
+    sns.scatterplot(x=y_test_k, y=y_pred_k, ax=ax, alpha=0.15, s=10, color="steelblue")
+    ax.plot([1.0, lim_high], [1.0, lim_high],
+            color="tomato", linewidth=1.2, linestyle="--", label="Perfect fit")
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(1.0, lim_high)
+    ax.set_ylim(1.0, lim_high)
+    ax.set_xlabel("Actual INCTOT ($k, log scale)")
+    ax.set_ylabel("Predicted INCTOT ($k, log scale)")
+    ax.legend(fontsize=9)
+
+    plt.tight_layout()
+    save_dir.mkdir(parents=True, exist_ok=True)
+    out_path = save_dir / "rf_actual_vs_predicted.png"
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  Figure saved → {out_path.relative_to(PROJECT_ROOT)}")
+
+
+RESULTS_DIR = PROJECT_ROOT / "reports" / "results"
+
+
+def save_results_txt(importances, r2_score, mse, mae, n=20, save_dir=RESULTS_DIR):
+    """Save model results to a text file in standardized format.
+
+    Args:
+        importances: Series of feature importances sorted descending.
+        r2_score: Test R² score.
+        mse: Mean Squared Error.
+        mae: Mean Absolute Error.
+        n: Number of top features to include.
+        save_dir: Directory to save the output file.
+    """
+    save_dir.mkdir(parents=True, exist_ok=True)
+    out_path = save_dir / "results_rf.txt"
+
+    lines = [
+        "Random Forest Results",
+        "=========================",
+        "",
+        "Best Parameters:",
+        "  n_estimators: 200",
+        "  max_depth: 15",
+        "",
+        f"R² score: {r2_score:.4f}",
+        f"MSE: {mse:,.2f}",
+        f"MAE: {mae:,.2f}",
+        "",
+        f"Top {n} Feature Importances:",
+        "---------------------------",
+    ]
+    for rank, (name, score) in enumerate(importances.head(n).items(), 1):
+        lines.append(f"  {rank:>2}. {name:<20s} {score:.6f}")
+
+    out_path.write_text("\n".join(lines) + "\n")
+    print(f"  Results saved → {out_path.relative_to(PROJECT_ROOT)}")
 
 
 def main():
@@ -175,7 +212,11 @@ def main():
     print_top_features(importances)
 
     print("\nGenerating diagnostic plots...")
-    plot_results(importances, y_test, np.array(y_pred), score, mse=mse, mae=mae)
+    plot_feature_importance(importances)
+    plot_actual_vs_predicted(y_test, np.array(y_pred), score, mse=mse, mae=mae)
+
+    print("\nSaving results text file...")
+    save_results_txt(importances, score, mse, mae)
 
 
 if __name__ == "__main__":
