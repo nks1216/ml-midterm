@@ -177,6 +177,17 @@ $$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
 
 Gradient Boosting builds an ensemble of shallow decision trees sequentially, where each new tree is trained to correct the residual errors of the previous ones. This iterative structure allows the model to capture nonlinear relationships and complex interactions. Unlike Random Forest—which averages many independent trees—Gradient Boosting improves stage‑by‑stage and is more sensitive to hyperparameter choices.
 
+$$
+\hat{y}(x) = F_M(x) = F_0(x) + \sum_{m=1}^{M} \nu \cdot h_m(x)
+$$
+
+Where:
+
+- $F_0(x)$: initial prediction (typically the mean of the target variable)
+- $h_m(x)$: the weak learner (shallow tree) fitted at stage $m$
+- $\nu$: learning rate controlling the contribution of each tree
+- $M$: number of boosting stages (equivalent to `n_estimators`)
+
 **Model Configuration**
 
 | Hyperparameter | Description                                            |
