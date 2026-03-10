@@ -318,8 +318,9 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |-------|----------------------|
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png) |
 | **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
-| **Random Forest** | <img width="437" height="412" alt="image" src="https://github.com/user-attachments/assets/5b972691-2066-462a-802d-3bf358cc24c0" /> |
+| **Random Forest** | <img width="1175" height="1025" alt="rf_actual_vs_predicted" src="https://github.com/user-attachments/assets/a84e8cf4-31c8-421a-b35a-ed029c89b7ff" /> |
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
+
 
 
 ## 5. Reduced Feature Analysis (Gradient Boosting)
