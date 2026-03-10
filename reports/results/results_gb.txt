@@ -1,6 +1,11 @@
 Gradient Boosting Results
 =========================
 
+Best Parameters:
+  learning_rate: 0.1
+  max_depth: 4
+  n_estimators: 200
+
 R² score: 0.3666
 MSE: 4,716,257,047.42
 MAE: 29,766.28
