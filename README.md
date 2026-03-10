@@ -16,7 +16,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 - **Extract ID**: `cps_00001`
 - **File format**: Fixed-width ASCII (`.dat`), parsed via DDI XML codebook (`.xml`)
 - **Total variables in extract**: 313
-- **Selected variables for analysis**: 43 features + 1 target
+- **Selected variables for analysis**: 47 features + 1 target
 - **Source**: [IPUMS CPS](https://cps.ipums.org/cps/)
 
 ---
@@ -206,7 +206,7 @@ Where:
 
 | Hyperparameter | Description                                            |
 |----------------| -------------------------------------------------------|
-| n_estimator    | Number of boosting stages; controls how many sequential correction steps the model performs.                       |
+| n_estimators   | Number of boosting stages; controls how many sequential correction steps the model performs.                       |
 | learning_rate  | Scales each tree’s contribution to the final prediction, preventing the model from overreacting to residual errors.|
 | max_depth      | Maximum depth of each individual tree; keeps trees as weak learners and reduces early overfitting.                 |
 
@@ -240,7 +240,7 @@ Using the tuned hyperparameters, the model achieved:
 - Test MAE: 29,766
 - Test R²: 0.3666
 
-**Comparsion with Baseline Gradient Boosting**
+**Comparison with Baseline Gradient Boosting**
 
 |Parameter/Metric|Baseline GB|**Tuned GB**|Description               |
 |----------------|-----------|------------|--------------------------|
@@ -255,7 +255,7 @@ Top 5 Feature Importance (Baseline GB vs. Tuned GB)
 
 - Both models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
 
-- The tuned model places **AGE** in the top 5 instead of **UHRSWORKKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
+- The tuned model places **AGE** in the top 5 instead of **UHRSWORKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
 
 The tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance. 
 
@@ -277,7 +277,7 @@ Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it m
 
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
-| Linear Regression | 72,636        |34,199  |0.2914 |
+| Linear Regression | 5,276,020,877 |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
 | Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
@@ -291,11 +291,11 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 | Model | Rank | Feature | Importance | Description |
 |-------|------|----------|-------------|-------------|
-| **Linear Regression** | 1 |  |  |  |
-|                       | 2 |  |  |  |
-|                       | 3 |  |  |  |
-|                       | 4 |  |  |  |
-|                       | 5 |  |  |  |
+| **Linear Regression** | 1 | N/A | N/A | Raw coefficients are not directly comparable without standardization | 
+|                       | 2 | N/A | N/A | N/A |
+|                       | 3 | N/A | N/A | N/A |
+|                       | 4 | N/A | N/A | N/A |
+|                       | 5 | N/A | N/A | N/A |
 | **Elastic Net**       | 1 | RETCONT | 15792.15 | Retirement contributions |
 |                       | 2 | EDUC    | 9165.76  | Educational attainment |
 |                       | 3 | OCC2010 | 7074.13  | Occupation (2010 classification) |
@@ -316,8 +316,8 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 #### Actual vs Predicted 
 | Model | Actual vs. Predicted |
 |-------|----------------------|
-| **Linear Regression** | <!-- INSERT: reports/figures/rf_results.png (Panel 2) --> |
-| **Elastic Net** | <!-- INSERT: reports/figures/gb_results.png (Panel 2) --> |
+| **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png) |
+| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
 | **Random Forest** | <img width="437" height="412" alt="image" src="https://github.com/user-attachments/assets/5b972691-2066-462a-802d-3bf358cc24c0" /> |
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
 
@@ -353,7 +353,7 @@ RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education l
 CLASSWKR (class of worker).
 
 
-## 6. Ensemble Extentions (Bagging, Boosting, Stacking)
+## 6. Ensemble Extensions (Bagging, Boosting, Stacking)
 If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
 
 
@@ -378,9 +378,9 @@ Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuL
 - data/codebook/cps_00001.xml
 
 ### 7.4 Run the code
-```  
+```bash
 python3 src/data_clean.py
-python3 src/models/model_lr.py
+python3 src/models/model_linear.py
 python3 src/models/model_en.py
 python3 src/models/model_rf.py
 python3 src/models/model_gb.py
@@ -406,4 +406,3 @@ For convenience, individual model scripts are provided.
 - Each member opened pull requests for their work and merged them after review and testing.
 - The repository contains more than 30 commits across multiple contributors.
 - All code and documentation were merged into the main branch before submission.
-
