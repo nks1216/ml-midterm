@@ -322,7 +322,6 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
 
 
-
 ## 5. Reduced Feature Analysis (Gradient Boosting)
 
 Because Gradient Boosting emerged as the best-performing model in the full-feature comparison, we focus our reduced-specification analysis on this model to assess whether a more compact and interpretable feature set can preserve most of its predictive power.
@@ -344,9 +343,15 @@ RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSW
 | MAE     | 29,766        | 29,904           | slightly higher error           |
 | R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
 
-
 Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space. This also serves as a simple robustness check, showing that the Gradient Boosting model remains stable even when the feature space is substantially reduced.
 
+To illustrate this further, the optimal hyperparameters for each specification are shown below:
+
+*Optimal Hyperparameters:*
+- Full GB: learning_rate = 0.1, max_depth = 4, n_estimators = 200 
+- Reduced GB: learning_rate = 0.1, max_depth = 3, n_estimators = 400
+
+Interestingly, the optimal hyperparameters also shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors. This further reinforces the robustness of the Gradient Boosting approach, as performance remains stable despite changes in both dimensionality and tuning configuration.
 
 **Brief Description of Selected Features:**  
 RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education level), SEX (sex), AGE (age), PAIDGH (employer-paid group health), FIRMSIZE (firm size), RELATE (relationship to household head), CBSASZ (metro area size), MARST (marital status), UHRSWORKT (usual weekly hours, all jobs), UHRSWORK1 (usual weekly hours, main job), IND (industry), FAMSIZE (family size), PENSION (pension coverage), EMPSTAT (employment status), WKSTAT (work status), HIMCAIDLY (Medicaid coverage), NUMEMPS (number of employers), 
