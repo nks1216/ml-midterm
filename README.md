@@ -4,7 +4,7 @@
 
 This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction supports labor market analysis, informs targeted workforce programs, and sheds light on patterns of inequality and economic mobility at the individual level, making this prediction problem practically relevant for real‑world economic decision‑making.
 
-To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. We also conduct a brief reduced-feature analysis using the top 20 consensus predictors to examine whether a more compact Gradient Boosting model can retain most of the predictive signal. Finally, we explore ensemble methods such as bagging, boosting, and stacking to further refine prediction accuracy. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
+To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
 
 
 ## 2. Dataset Description
@@ -271,6 +271,38 @@ Baseline Gradient Boosting results are included for comparison, but the final mo
 
 Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it makes larger errors on a small number of very high‑income observations. However, it achieves a lower MAE, meaning that its typical prediction errors are smaller. In addition, Gradient Boosting attains a higher R², suggesting that it explains more of the overall variation in income. This pattern reflects a common trade‑off in boosting models: they reduce average errors and improve explanatory power but remain sensitive to extreme outliers due to their sequential learning structure.
 
+**Reduced Feature Analysis**
+
+To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced Gradient Boosting model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset and allow us to test the robustness of the Gradient Boosting results while simplifying the feature space.
+
+**Selected Top 20 Features:**
+
+RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR.
+
+**Performance Comparison: Full vs. Reduced Gradient Boosting**
+
+| Metrics | Full GB       | **Reduced GB**   | Description                     | 
+|---------|---------------|------------------|---------------------------------|
+|         | (47 features) |**(20 features)** |                                 |
+| MSE     | 4,716,257,047 | 4,741,541,933    | slightly higher error           |
+| MAE     | 29,766        | 29,904           | slightly higher error           |
+| R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
+
+Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space. This also serves as a simple robustness check, showing that the Gradient Boosting model remains stable even when the feature space is substantially reduced.
+
+To illustrate this further, the optimal hyperparameters for each specification are shown below:
+
+*Optimal Hyperparameters:*
+- Full GB: learning_rate = 0.1, max_depth = 4, n_estimators = 200 
+- Reduced GB: learning_rate = 0.1, max_depth = 3, n_estimators = 400
+
+Interestingly, the optimal hyperparameters also shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors. This further reinforces the robustness of the Gradient Boosting approach, as performance remains stable despite changes in both dimensionality and tuning configuration.
+
+**Brief Description of Selected Features:**  
+RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education level), SEX (sex), AGE (age), PAIDGH (employer-paid group health), FIRMSIZE (firm size), RELATE (relationship to household head), CBSASZ (metro area size), MARST (marital status), UHRSWORKT (usual weekly hours, all jobs), UHRSWORK1 (usual weekly hours, main job), IND (industry), FAMSIZE (family size), PENSION (pension coverage), EMPSTAT (employment status), WKSTAT (work status), HIMCAIDLY (Medicaid coverage), NUMEMPS (number of employers), 
+CLASSWKR (class of worker).
+
+
 ## 4. Comparative Evaluation of Models
 
 #### MSE, MAE, and R² 
@@ -322,68 +354,27 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
 
 
+## 5. Reproducibility
 
-## 5. Reduced Feature Analysis (Gradient Boosting)
-
-Because Gradient Boosting emerged as the best-performing model in the full-feature comparison, we focus our reduced-specification analysis on this model to assess whether a more compact and interpretable feature set can preserve most of its predictive power.
-
-**Feature Selection Rationale**
-
-To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced Gradient Boosting model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset and allow us to test the robustness of the Gradient Boosting results while simplifying the feature space.
-
-**Selected Top 20 Features:**
-
-RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR.
-
-**Performance Comparison: Full vs. Reduced Gradient Boosting**
-
-| Metrics | Full GB       | **Reduced GB**   | Description                     | 
-|---------|---------------|------------------|---------------------------------|
-|         | (47 features) |**(20 features)** |                                 |
-| MSE     | 4,716,257,047 | 4,741,541,933    | slightly higher error           |
-| MAE     | 29,766        | 29,904           | slightly higher error           |
-| R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
-
-Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space. This also serves as a simple robustness check, showing that the Gradient Boosting model remains stable even when the feature space is substantially reduced.
-
-To illustrate this further, the optimal hyperparameters for each specification are shown below:
-
-*Optimal Hyperparameters:*
-- Full GB: learning_rate = 0.1, max_depth = 4, n_estimators = 200 
-- Reduced GB: learning_rate = 0.1, max_depth = 3, n_estimators = 400
-
-Interestingly, the optimal hyperparameters also shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors. This further reinforces the robustness of the Gradient Boosting approach, as performance remains stable despite changes in both dimensionality and tuning configuration.
-
-**Brief Description of Selected Features:**  
-RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education level), SEX (sex), AGE (age), PAIDGH (employer-paid group health), FIRMSIZE (firm size), RELATE (relationship to household head), CBSASZ (metro area size), MARST (marital status), UHRSWORKT (usual weekly hours, all jobs), UHRSWORK1 (usual weekly hours, main job), IND (industry), FAMSIZE (family size), PENSION (pension coverage), EMPSTAT (employment status), WKSTAT (work status), HIMCAIDLY (Medicaid coverage), NUMEMPS (number of employers), 
-CLASSWKR (class of worker).
-
-
-## 6. Ensemble Extensions (Bagging, Boosting, Stacking)
-If time permits, apply ensemble techniques to refine predictions and compare their performance against individual models.
-
-
-## 7. Reproducibility
-
-### 7.1. Setting up the Virtual Environment
+### 5.1. Setting up the Virtual Environment
 
 - Create a virtual environment: `python3 -m venv venv`
 - Activate the virtual environment: `source venv/bin/activate`
 - Install all required packages: `pip install -r requirements.txt`
 
-### 7.2. Clone the repository  
+### 5.2. Clone the repository  
 ```
 git clone <repo-url>
 cd ml-midterm
 pip install -r requirements.txt
 ```
 
-### 7.3. Download the data 
+### 5.3. Download the data 
 Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuLXzHCyhsloz?usp=sharing) and save it in the below folders.  
 - data/raw/cps_00001.dat
 - data/codebook/cps_00001.xml
 
-### 7.4 Run the code
+### 5.4 Run the code
 ```bash
 python3 src/data_clean.py
 python3 src/models/model_linear.py
@@ -394,7 +385,7 @@ python3 src/models/model_gb_top20.py
 ```
 For convenience, individual model scripts are provided.
 
-## 8. Limitations and Future Improvements
+## 6. Limitations and Future Improvements
 
 **Modeling Limitations**
 
@@ -406,7 +397,7 @@ For convenience, individual model scripts are provided.
 
 - **All models are predictive rather than causal**, meaning the results cannot be interpreted as estimating the causal effect of any feature on income.
 
-## 9. Collaboration and Workflow
+## 7. Collaboration and Workflow
 
 - All team members worked through GitHub Issues and feature branches, following a branch‑per‑issue workflow.
 - Each member opened pull requests for their work and merged them after review and testing.
