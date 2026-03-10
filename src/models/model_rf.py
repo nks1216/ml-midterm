@@ -121,11 +121,7 @@ def plot_actual_vs_predicted(y_test, y_pred, r2_score, mse=None, mae=None, save_
     fig, ax = plt.subplots(figsize=(8, 7))
 
     subtitle = f"R² = {r2_score:.4f}"
-    if mse is not None:
-        subtitle += f"  |  RMSE = ${mse ** 0.5:,.0f}"
-    if mae is not None:
-        subtitle += f"  |  MAE = ${mae:,.0f}"
-    ax.set_title(f"Random Forest — Actual vs Predicted\n{subtitle}", fontsize=13, fontweight="bold")
+    ax.set_title(f"Actual vs Predicted\n{subtitle}", fontsize=13, fontweight="bold")
 
     # Clip to 1 ($1k) so log scale starts at 10^0
     y_test_k = np.clip(y_test / 1_000, 1.0, None)
