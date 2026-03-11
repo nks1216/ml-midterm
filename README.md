@@ -598,7 +598,7 @@ Retirement contributions (`RETCONT`, 0.4397) represents the amount an individual
 
 Occupation (`OCC2010`, 0.1430) and education (`EDUC`, 0.1119) follow as major determinants, reflecting the strong link between job type, skill level, and income. Demographic factors such as sex (`SEX`, 0.0351) and age (`AGE`, 0.0347) also contribute meaningfully, capturing systematic differences in labor‑market outcomes. 
 
-Work‑related variables—including weekly hours (`UHRSWORKT` 0.0307, `UHRSWORK1` 0.0182), employer‑paid health insurance (`PAIDGH` 0.0262), and industry (`IND` 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (`NUMEMPS` 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
+Work‑related variables—including weekly hours (`UHRSWORKT`, 0.0307, `UHRSWORK1`, 0.0182), employer‑paid health insurance (`PAIDGH`, 0.0262), and industry (`IND`, 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (`NUMEMPS`, 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
 
 ### 4.5. Key Takeaways and Recommendations
 
