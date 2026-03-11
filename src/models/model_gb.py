@@ -59,7 +59,8 @@ def train_gradient_boosting(X_train, y_train, n_trials=20):
 
         return score
 
-    study = optuna.create_study(direction="maximize")
+    sampler = optuna.samplers.TPESampler(seed=42)
+    study = optuna.create_study(direction="maximize", sampler=sampler)
     study.optimize(objective, n_trials=n_trials)
 
     print("\nBest parameters found:", study.best_params)
@@ -187,8 +188,11 @@ def plot_gb_actual_vs_predicted(
     ax.set_xscale("log")
     ax.set_yscale("log")
 
-    min_val = min(actual.min(), predicted.min())
+    min_val = 1
     max_val = max(actual.max(), predicted.max())
+
+    ax.set_xlim(1, max_val)
+    ax.set_ylim(1, max_val)
 
     ax.plot([min_val, max_val], [min_val, max_val], "r--", label="Perfect fit")
 

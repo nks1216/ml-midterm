@@ -5,12 +5,12 @@ Train a Gradient Boosting model to predict individual income (Top 20 features on
 
 import pandas as pd
 import numpy as np
+import optuna
 from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 import matplotlib.pyplot as plt
 from matplotlib.ticker import LogFormatterMathtext
-
 
 def load_data():
     """
@@ -46,43 +46,47 @@ def load_data():
     return X_train, X_test, y_train, y_test
 
 
-from sklearn.model_selection import GridSearchCV
-
-def train_gradient_boosting(X_train, y_train):
+def train_gradient_boosting(X_train, y_train, n_trials=20):
     """
-    Train Gradient Boosting with hyperparameter tuning using GridSearchCV.
+    Train Gradient Boosting with hyperparameter tuning using Optuna.
     Returns:
-        Best estimator found by grid search
+    Best estimator and best parameters
     """
 
-    # Base model
-    gbr = GradientBoostingRegressor(random_state=42)
+    def objective(trial):
+        params = {
+            "n_estimators": trial.suggest_int("n_estimators", 100, 500),
+            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.05, log=True),
+            "max_depth": trial.suggest_int("max_depth", 2, 4),
+        }
 
-    # Hyperparameter search space
-    param_grid = {
-        'n_estimators': [100, 200, 300, 400, 500],
-        'learning_rate': [0.01, 0.03, 0.05, 0.1],
-        'max_depth': [2, 3, 4]
-    }
 
-    # Grid search
-    grid_search = GridSearchCV(
-        estimator=gbr,
-        param_grid=param_grid,
-        cv=3,
-        scoring='r2',
-        n_jobs=-1,
-        verbose=2
+        model = GradientBoostingRegressor(random_state=42, **params)
+
+        score = cross_val_score(
+            model, X_train, y_train,
+            cv=3,
+            scoring="r2",
+            n_jobs=-1
+        ).mean()
+
+        return score
+
+    sampler = optuna.samplers.TPESampler(seed=42)
+    study = optuna.create_study(direction="maximize", sampler=sampler)
+    study.optimize(objective, n_trials=n_trials)
+
+    print("\nBest parameters found:", study.best_params)
+    print("Best CV R²:", study.best_value)
+
+    # Train final model with best params
+    best_model = GradientBoostingRegressor(
+        random_state=42,
+        **study.best_params
     )
+    best_model.fit(X_train, y_train)
 
-    # Fit grid search
-    grid_search.fit(X_train, y_train)
-
-    print("\nBest parameters found:", grid_search.best_params_)
-    print("Best CV R²:", grid_search.best_score_)
-
-    # Return best model
-    return grid_search.best_estimator_, grid_search.best_params_
+    return best_model, study.best_params
 
 
 def evaluate(model, X_test, y_test):
@@ -164,30 +168,31 @@ def plot_gb_actual_vs_predicted(
     preds = model.predict(X_test)
 
     # Clip negatives (log scale cannot handle <= 0)
-    actual = np.clip(y_test, 1e-1, None)
-    predicted = np.clip(preds, 1e-1, None)
+    actual = np.clip(y_test, 1, None)
+    predicted = np.clip(preds, 1, None)
 
     fig, ax = plt.subplots(figsize=(8, 8))
 
     ax.scatter(actual, predicted, alpha=0.25, s=8, color="steelblue")
 
-    # Set log10 scale
     ax.set_xscale("log")
     ax.set_yscale("log")
 
-    # Perfect prediction line
-    min_val = min(actual.min(), predicted.min())
+    min_val = 1
     max_val = max(actual.max(), predicted.max())
+
+    ax.set_xlim(1, max_val)
+    ax.set_ylim(1, max_val)
+
     ax.plot([min_val, max_val], [min_val, max_val], "r--", label="Perfect fit")
 
-    # Log10 tick formatting
     ax.xaxis.set_major_formatter(LogFormatterMathtext(base=10))
     ax.yaxis.set_major_formatter(LogFormatterMathtext(base=10))
 
     ax.grid(True, which="major", linestyle="--", alpha=0.6)
 
-    ax.set_xlabel("Actual INCTOT ($k, log10 scale)")
-    ax.set_ylabel("Predicted INCTOT ($k, log10 scale)")
+    ax.set_xlabel("Actual INCTOT ($k, log scale)")
+    ax.set_ylabel("Predicted INCTOT ($k, log scale)")
 
     r2 = r2_score(y_test, preds)
     ax.set_title(f"Actual vs Predicted (R² = {r2:.3f})")
@@ -233,7 +238,7 @@ def main():
 
     X_train, X_test, y_train, y_test = load_data()
 
-    model, best_params = train_gradient_boosting(X_train, y_train)
+    model, best_params = train_gradient_boosting(X_train, y_train, n_trials=20)
 
     # Get evaluation results
     r2, mse, mae = evaluate(model, X_test, y_test)

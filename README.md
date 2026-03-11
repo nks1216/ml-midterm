@@ -240,11 +240,11 @@ We then applied `Optuna` to perform a more flexible, continuous search over the 
 
 |Parameter/Metric |Baseline GB|Grid GB  |Optuna GB|
 |-----------------|-----------|---------|---------|
-|n_estimators     |300        |200      |385      |
-|learning_rate    |0.05       |0.1      |0.0493   |
+|n_estimators     |300        |200      |475      |
+|learning_rate    |0.05       |0.1      |0.0382   |
 |max_depth        |3          |4        |4        |
-|Test MSE         |4.80B      |4.72B    |4.72B    |
-|Test MAE         |30,158     |29,766   |29,687   |
+|Test MSE         |4.80B      |4.72B    |4.73B    |
+|Test MAE         |30,158     |29,766   |29,747   |
 |Test R²          |0.3559     |0.3666   |0.3659   | 
 |Computation Time |—          |~10 min  |~14 min  |
 
@@ -252,55 +252,52 @@ Both tuned models (Grid GB and Optuna GB) achieve lower prediction error and hig
 
 When comparing Grid GB and Optuna GB, neither model clearly dominates the other. Their performance differences are small, and the results depend heavily on the chosen hyperparameter search space. Expanding or narrowing the search ranges would likely shift the optimal configuration and the resulting metrics. Ultimately, there is a trade‑off between achieving the best possible performance and minimizing computation time.
 
-*Top 5 Feature Importance within Gradient Boosting*
+**Top 5 Feature Importance within Gradient Boosting**
 
-- All Gradient Boosting models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
+All Gradient Boosting models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
 
-- The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of **UHRSWORKT**. 
+The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of **UHRSWORKT**. 
 
 **Comparison with Random Forest**
 
 | Metric | Random Forest  | **Gradient Boosting**  |Description  |
 |--------|----------------|------------------------|-------------|
-| MSE    | 4.98B          | 4.72B                  |lower error  |
-| MAE    | 31,322         | 29,687                 |lower error  |
-| R²     | 0.3313         | 0.3659                 |higher R²    |
+| MSE    | 4.98B          | 4.73B                  |lower error  |
+| MAE    | 31,322         | 29,747                 |lower error  |
+| R²     | 0.3313         | 0.3651                 |higher R²    |
 
 Gradient Boosting (Optuna) achieves lower MSE and MAE and a higher R² than Random Forest, indicating smaller prediction errors and stronger explanatory power.
 
 For simplicity and clarity, only the Optuna‑based training code and final results are included in the repository, while the baseline model and the GridSearchCV setup are documented here as part of the model development process.
 
-
 **Reduced Feature Analysis**
 
 To evaluate whether a smaller and more interpretable feature set can achieve comparable performance, we constructed a reduced Gradient Boosting model using the 20 features that consistently appeared among the top predictors across Elastic Net, Random Forest, and Gradient Boosting. These variables represent the most stable and influential determinants of income in our dataset and allow us to test the robustness of the Gradient Boosting results while simplifying the feature space.
 
-**Selected Top 20 Features:**
+*Selected Top 20 Features with brief description*
 
-RETCONT, OCC2010, EDUC, SEX, AGE, PAIDGH, FIRMSIZE, RELATE, CBSASZ, MARST, UHRSWORKT, UHRSWORK1, IND, FAMSIZE, PENSION, EMPSTAT, WKSTAT, HIMCAIDLY, NUMEMPS, CLASSWKR.
+`RETCONT` retirement contributions, `OCC2010` occupation code, `EDUC` education level, `SEX` sex, `AGE` age, `PAIDGH` employer-paid group health, `FIRMSIZE` firm size, `RELATE` relationship to household head, `CBSASZ` metro area size, `MARST` marital status, `UHRSWORKT` usual weekly hours, all jobs, `UHRSWORK1` usual weekly hours, main job, `IND` industry, `FAMSIZE` family size, `PENSION` pension coverage, `EMPSTAT` employment status, `WKSTAT` work status, `HIMCAIDLY` Medicaid coverage, `NUMEMPS` number of employers, 
+`CLASSWKR` class of worker.
 
 **Performance Comparison: Full vs. Reduced Gradient Boosting**
 
-| Metrics | Full GB       | **Reduced GB**   | Description                     | 
-|---------|---------------|------------------|---------------------------------|
-|         | (47 features) |**(20 features)** |                                 |
-| MSE     | 4,716,257,047 | 4,741,541,933    | slightly higher error           |
-| MAE     | 29,766        | 29,904           | slightly higher error           |
-| R²      | 0.3666        | 0.3632           | slightly lower explanatory power|
+| Metrics         | Full GB       | **Reduced GB**   | Description           | 
+|-----------------|---------------|------------------|-----------------------|
+|                 | (47 features) |**(20 features)** |                       |
+| MSE             | 4.73B         | 4,76B            | slightly higher error |
+| MAE             | 29,747        | 29,989           | slightly higher error |
+| R²              | 0.3651        | 0.3611           | slightly lower R²     |
+|Computation Time |~14 min        |~5 min            | much shorter          |
 
 Using only the top 20 consensus features, the reduced Gradient Boosting model performs very similarly to the full 47‑feature specification, though it exhibits slightly higher MSE and MAE and a small decrease in R². These modest differences indicate that while the reduced model sacrifices a small amount of predictive accuracy, a large share of the predictive signal is still concentrated in a relatively small subset of variables. This suggests that the selected features capture the core determinants of income while offering a more compact and interpretable feature space. This also serves as a simple robustness check, showing that the Gradient Boosting model remains stable even when the feature space is substantially reduced.
 
-To illustrate this further, the optimal hyperparameters for each specification are shown below:
+Considering that the reduced model preserves most of the predictive power while requiring only about one‑third of the computation time, this approach is appealing for applications where efficiency and interpretability matter.
 
 *Optimal Hyperparameters:*
-- Full GB: learning_rate = 0.1, max_depth = 4, n_estimators = 200 
-- Reduced GB: learning_rate = 0.1, max_depth = 3, n_estimators = 400
+- Full GB: learning_rate = 0.0382, max_depth = 4, n_estimators = 475
+- Reduced GB: learning_rate = 0.0431, max_depth = 4, n_estimators = 351
 
-Interestingly, the optimal hyperparameters also shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors. This further reinforces the robustness of the Gradient Boosting approach, as performance remains stable despite changes in both dimensionality and tuning configuration.
-
-**Brief Description of Selected Features:**  
-RETCONT (retirement contributions), OCC2010 (occupation code), EDUC (education level), SEX (sex), AGE (age), PAIDGH (employer-paid group health), FIRMSIZE (firm size), RELATE (relationship to household head), CBSASZ (metro area size), MARST (marital status), UHRSWORKT (usual weekly hours, all jobs), UHRSWORK1 (usual weekly hours, main job), IND (industry), FAMSIZE (family size), PENSION (pension coverage), EMPSTAT (employment status), WKSTAT (work status), HIMCAIDLY (Medicaid coverage), NUMEMPS (number of employers), 
-CLASSWKR (class of worker).
+These results also show that the optimal hyperparameters shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors.
 
 
 ## 4. Comparative Evaluation of Models
@@ -312,7 +309,7 @@ CLASSWKR (class of worker).
 | Linear Regression | 5,276,020,877 |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
-| Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
+| Gradient Boosting | 4,727,377,165 |29,747  |0.3651 | 
 
 Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net is an extension of Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data. 
 
@@ -338,11 +335,11 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 3 | AGE       | 0.0695 | Respondent’s age |
 |                       | 4 | EDUC      | 0.0568 | Educational attainment |
 |                       | 5 | IND       | 0.0493 | Industry |
-| **Gradient Boosting** | 1 | RETCONT   | 0.4377 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1436 | Occupation (2010 classification) |
-|                       | 3 | EDUC      | 0.1162 | Educational attainment |
-|                       | 4 | SEX       | 0.0340 | Respondent’s sex |
-|                       | 5 | AGE       | 0.0332 | Respondent's age |
+| **Gradient Boosting** | 1 | RETCONT   | 0.4397 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1430 | Occupation (2010 classification) |
+|                       | 3 | EDUC      | 0.1119 | Educational attainment |
+|                       | 4 | SEX       | 0.0351 | Respondent’s sex |
+|                       | 5 | AGE       | 0.0347 | Respondent's age |
 
 
 #### Actual vs Predicted 
