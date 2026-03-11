@@ -386,9 +386,139 @@ Linear Regression is transparent, easy to interpret, and computationally efficie
 
 ### 3.4. Elastic Net (New Model)
 
+## 3.4. Elastic Net (New Model)
+
 This model serves as our required "new technique" not covered in class.
 
-Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predictors more effectively than Lasso or Ridge alone. It provides a more stable coefficient structure and performs feature shrinkage, which is useful for high‑dimensional socioeconomic data.
+### Model Concept
+
+Elastic Net is a regularized linear regression model that adds two penalty terms to the standard linear regression objective function. Where ordinary linear regression simply minimizes prediction error, Elastic Net minimizes prediction error *plus* a penalty on the size of the coefficients:
+
+minimize: MSE + α × [l1_ratio × |β| + (1 - l1_ratio) × β²]
+
+The two penalties are:
+
+- **L1 penalty (Lasso)**: penalizes the *absolute value* of coefficients. This forces some coefficients to become exactly zero, effectively removing those features from the model entirely. This is the "feature selection" penalty.
+- **L2 penalty (Ridge)**: penalizes the *square* of coefficients. This shrinks all coefficients toward zero but rarely eliminates them completely. This is the "stability" penalty that handles correlated features.
+
+Elastic Net combines both, controlled by two hyperparameters:
+- **alpha (α)**: overall penalty strength. Higher alpha = stronger shrinkage = more features dropped.
+- **l1_ratio**: balance between L1 and L2. l1_ratio=1.0 is pure Lasso (maximum feature dropping), l1_ratio=0.0 is pure Ridge (no feature dropping).
+
+### Why Elastic Net for This Project
+
+Our dataset has 47 features, many of which are correlated with each other. For example:
+- `EMPSTAT` and `LABFORCE` both capture employment status
+- `UHRSWORKT` and `UHRSWORK1` both measure hours worked
+- `ANYCOVLY`, `PHINSUR`, `GRPCOVLY` all relate to health insurance
+
+Pure Lasso (L1 only) tends to arbitrarily pick one variable from a correlated group and drop the rest, which can be unstable. Pure Ridge keeps everything but cannot perform feature selection. Elastic Net handles both — it keeps correlated features together while still being able to eliminate truly irrelevant ones.
+
+### Preprocessing: StandardScaler
+
+Before fitting ElasticNet, all 47 features are standardized using `StandardScaler`:
+```python
+Pipeline([("scaler", StandardScaler()), ("model", ElasticNet(max_iter=10000))])
+```
+
+This transforms every feature to have mean = 0 and standard deviation = 1. This step is essential for two reasons:
+1. Without scaling, features measured in large units (e.g. INCTOT in dollars) would dominate features measured in small units (e.g. SEX coded as 1/2), making coefficient comparison meaningless.
+2. The penalty terms treat all coefficients equally — so all features must be on the same scale before penalization.
+
+After standardization, the absolute value of each coefficient directly reflects its importance to the model.
+
+### Default Model Results
+
+Our model uses default hyperparameters (alpha=1, l1_ratio=0.5):
+
+| Metric | Value |
+|--------|-------|
+| R² | 0.2760 |
+| MSE | 5,390,603,768 |
+| MAE | 33,895 |
+
+With these settings, **ElasticNet retained all 47 features** — no features were zeroed out. This indicates that under moderate regularization, every socioeconomic variable in our dataset carries at least some marginal predictive signal for income.
+
+### Regularization Sensitivity Analysis
+
+To understand how the penalty affects feature selection, we tested increasing values of alpha and l1_ratio:
+
+| alpha | l1_ratio | Features Dropped |
+|-------|----------|-----------------|
+| 1 | 0.5 | 0 |
+| 100 | 0.5 | 0 |
+| 1000 | 0.5 | 0 |
+| 1000 | 0.9 | 2 |
+| 10000 | 0.99 | 28 |
+
+**At alpha=1000, l1_ratio=0.9**, the first features to be eliminated were `FAMSIZE` (family size) and `STATEFIP` (state FIPS code) — suggesting these contribute the least marginal income-predictive signal once other variables are controlled for.
+
+**At extreme regularization (alpha=10000, l1_ratio=0.99)**, only 19 features survived:
+
+**✅ Kept (19 features)**
+
+| Feature | Description | Category |
+|---------|-------------|----------|
+| RETCONT | Retirement contributions | Employment |
+| OCC2010 | Occupation code | Employment |
+| EDUC | Educational attainment | Education |
+| SEX | Gender | Demographics |
+| MARST | Marital status | Demographics |
+| EMPSTAT | Employment status | Employment |
+| LABFORCE | Labor force participation | Employment |
+| CLASSWKR | Class of worker (private/govt/self-employed) | Employment |
+| IND | Industry code | Employment |
+| NUMEMPS | Number of employers last year | Employment |
+| FIRMSIZE | Size of employer firm | Employment |
+| PENSION | Pension plan at work | Employment |
+| SRCEARN | Source of earnings (wage vs self-employed) | Employment |
+| PAIDGH | Employer paid for group health plan | Employment |
+| PUBHOUS | Living in public housing | Housing |
+| FOODSTMP | SNAP/food stamp recipiency | Gov. Benefits |
+| PHINSUR | Private health insurance | Health Insurance |
+| GRPCOVLY | Employer-based group health insurance | Health Insurance |
+| HIMCAIDLY | Covered by Medicaid | Health Insurance |
+
+**❌ Dropped (28 features)**
+
+| Feature | Description | Category |
+|---------|-------------|----------|
+| AGE | Age in years | Demographics |
+| RACE | Race category | Demographics |
+| VETSTAT | Veteran status | Demographics |
+| RELATE | Relationship to household head | Demographics |
+| POPSTAT | Adult civilian, armed forces, or child | Demographics |
+| HISPAN | Hispanic origin | Demographics |
+| NATIVITY | Native or foreign-born | Demographics |
+| CITIZEN | Citizenship status | Demographics |
+| BPL | Birthplace | Demographics |
+| SCHLCOLL | Currently in school or college | Education |
+| FAMSIZE | Number of family members | Family |
+| FAMKIND | Type of family unit | Family |
+| REGION | Census region | Geography |
+| STATEFIP | State (FIPS code) | Geography |
+| METRO | Metropolitan area status | Geography |
+| CBSASZ | Metro area population size | Geography |
+| UHRSWORKT | Usual weekly hours (all jobs) | Employment |
+| UHRSWORK1 | Usual weekly hours (main job) | Employment |
+| WKSTAT | Full or part-time work status | Employment |
+| PAIDHOUR | Paid by the hour | Employment |
+| UNION | Union membership status | Employment |
+| OWNERSHP | Home ownership status | Housing |
+| UNITSSTR | Units in housing structure | Housing |
+| RENTSUB | Government rent subsidy | Housing |
+| HEATSUB | Energy subsidy recipient | Gov. Benefits |
+| ANYCOVLY | Any health insurance last year | Health Insurance |
+| HIMCARELY | Covered by Medicare | Health Insurance |
+| MIGRATE1 | Migration status (moved in past year) | Migration |
+
+This sensitivity analysis confirms that our 47-feature default model is not over-specified: the default penalty retains all features because each contributes marginal signal, while aggressive regularization converges on a compact, interpretable core of income determinants. The 19 surviving features at extreme penalty form a coherent economic story — **employment structure** (OCC2010, IND, CLASSWKR), **compensation and benefits** (RETCONT, PENSION, PAIDGH), **demographic labor market factors** (SEX, EDUC, MARST), and **economic vulnerability indicators** (FOODSTMP, PUBHOUS, HIMCAIDLY).
+
+### Feature Importance
+
+Feature importance is measured as the absolute value of the standardized coefficients. Because all features were scaled before fitting, these values are directly comparable across features.
+
+> **Note**: ElasticNet coefficients are on a different scale than tree-based feature importances (which sum to 1). The ranking of top features is consistent across all models — RETCONT, EDUC, and OCC2010 appear in the top 3 across ElasticNet, Random Forest, and Gradient Boosting.
 
 ## 4. Comparative Evaluation of Models
 
