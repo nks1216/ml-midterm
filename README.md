@@ -389,7 +389,7 @@ Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predi
 
 ## 4. Comparative Evaluation of Models
 
-#### MSE, MAE, and R² 
+### 4.1. Performance Metrics (MSE, MAE, and R²) 
 
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
@@ -402,8 +402,16 @@ Across the four models, Linear Regression and Elastic Net perform the weakest, s
 
 In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based methods—achieve substantially better predictive performance. Random Forest already reduces both MSE and MAE relative to the linear models, but Gradient Boosting further improves upon Random Forest, achieving the lowest MSE and MAE and the highest R² overall. This suggests that, given the chosen feature set and hyperparameter search space, Gradient Boosting is the most effective model for capturing the complex, nonlinear income structure in this dataset.
 
+### 4.2. Actual vs Predicted (4 models)
 
-#### Top 5 Feature Importances 
+| Model | Actual vs. Predicted |
+|-------|----------------------|
+| **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) |
+| **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
+| **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
+| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
+
+### 4.3. Top 5 Feature Importances (Comparison Table)
 
 | Model | Rank | Feature | Importance | Description |
 |-------|------|----------|-------------|-------------|
@@ -428,15 +436,8 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 4 | SEX     | 6974  | Respondent's sex |
 |                       | 5 | AGE     | 4753  | Respondent's age |
 
-
-#### Actual vs Predicted 
-| Model | Actual vs. Predicted |
-|-------|----------------------|
-| **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) |
-| **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
-| **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
-| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
-
+### 4.4. Top 20 Feature Importances (Only for the Best Model: Gradient Boosting)
+![Gradient Boosting](reports/figures/gb_feature_importance.png)
 
 ## 5. Reproducibility
 
