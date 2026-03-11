@@ -2,33 +2,33 @@ Gradient Boosting Results
 =========================
 
 Best Parameters:
-  n_estimators: 385
-  learning_rate: 0.0492876836933005
+  n_estimators: 475
+  learning_rate: 0.03816472942537622
   max_depth: 4
 
-R² score: 0.3659
-MSE: 4,721,354,444.63
-MAE: 29,687.40
+R² score: 0.3651
+MSE: 4,727,377,165.48
+MAE: 29,746.98
 
 Top 20 Feature Importances:
 ---------------------------
-  1. RETCONT              0.438144
-  2. OCC2010              0.142816
-  3. EDUC                 0.115169
-  4. SEX                  0.034336
-  5. AGE                  0.033211
-  6. UHRSWORKT            0.030154
-  7. PAIDGH               0.024987
-  8. IND                  0.021371
-  9. UHRSWORK1            0.017425
- 10. FIRMSIZE             0.016669
- 11. RELATE               0.010925
- 12. NUMEMPS              0.010592
- 13. MARST                0.010266
- 14. PENSION              0.010075
- 15. EMPSTAT              0.008737
- 16. CLASSWKR             0.007298
- 17. FAMSIZE              0.005873
- 18. CBSASZ               0.005638
- 19. STATEFIP             0.005603
- 20. WKSTAT               0.005569
+  1. RETCONT              0.439730
+  2. OCC2010              0.143015
+  3. EDUC                 0.111941
+  4. SEX                  0.035079
+  5. AGE                  0.034667
+  6. UHRSWORKT            0.030655
+  7. PAIDGH               0.026186
+  8. IND                  0.024694
+  9. UHRSWORK1            0.018229
+ 10. NUMEMPS              0.012278
+ 11. RELATE               0.011272
+ 12. MARST                0.010812
+ 13. PENSION              0.010583
+ 14. FIRMSIZE             0.010097
+ 15. EMPSTAT              0.007940
+ 16. CLASSWKR             0.007147
+ 17. STATEFIP             0.006169
+ 18. WKSTAT               0.005892
+ 19. CBSASZ               0.005610
+ 20. FAMSIZE              0.005409
