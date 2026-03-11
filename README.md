@@ -386,11 +386,9 @@ Linear Regression is transparent, easy to interpret, and computationally efficie
 
 ### 3.4. Elastic Net (New Model)
 
-## 3.4. Elastic Net (New Model)
-
 This model serves as our required "new technique" not covered in class.
 
-### Model Concept
+**Model Concept**
 
 Elastic Net is a regularized linear regression model that adds two penalty terms to the standard linear regression objective function. Where ordinary linear regression simply minimizes prediction error, Elastic Net minimizes prediction error *plus* a penalty on the size of the coefficients:
 
@@ -405,7 +403,7 @@ Elastic Net combines both, controlled by two hyperparameters:
 - **alpha (α)**: overall penalty strength. Higher alpha = stronger shrinkage = more features dropped.
 - **l1_ratio**: balance between L1 and L2. l1_ratio=1.0 is pure Lasso (maximum feature dropping), l1_ratio=0.0 is pure Ridge (no feature dropping).
 
-### Why Elastic Net for This Project
+**Why Elastic Net for This Project**
 
 Our dataset has 47 features, many of which are correlated with each other. For example:
 - `EMPSTAT` and `LABFORCE` both capture employment status
@@ -414,7 +412,7 @@ Our dataset has 47 features, many of which are correlated with each other. For e
 
 Pure Lasso (L1 only) tends to arbitrarily pick one variable from a correlated group and drop the rest, which can be unstable. Pure Ridge keeps everything but cannot perform feature selection. Elastic Net handles both — it keeps correlated features together while still being able to eliminate truly irrelevant ones.
 
-### Preprocessing: StandardScaler
+**Preprocessing: StandardScaler**
 
 Before fitting ElasticNet, all 47 features are standardized using `StandardScaler`:
 ```python
@@ -427,7 +425,7 @@ This transforms every feature to have mean = 0 and standard deviation = 1. This 
 
 After standardization, the absolute value of each coefficient directly reflects its importance to the model.
 
-### Default Model Results
+**Default Model Results**
 
 Our model uses default hyperparameters (alpha=1, l1_ratio=0.5):
 
@@ -439,7 +437,7 @@ Our model uses default hyperparameters (alpha=1, l1_ratio=0.5):
 
 With these settings, **ElasticNet retained all 47 features** — no features were zeroed out. This indicates that under moderate regularization, every socioeconomic variable in our dataset carries at least some marginal predictive signal for income.
 
-### Regularization Sensitivity Analysis
+**Regularization Sensitivity Analysis**
 
 To understand how the penalty affects feature selection, we tested increasing values of alpha and l1_ratio:
 
@@ -514,7 +512,7 @@ To understand how the penalty affects feature selection, we tested increasing va
 
 This sensitivity analysis confirms that our 47-feature default model is not over-specified: the default penalty retains all features because each contributes marginal signal, while aggressive regularization converges on a compact, interpretable core of income determinants. The 19 surviving features at extreme penalty form a coherent economic story — **employment structure** (OCC2010, IND, CLASSWKR), **compensation and benefits** (RETCONT, PENSION, PAIDGH), **demographic labor market factors** (SEX, EDUC, MARST), and **economic vulnerability indicators** (FOODSTMP, PUBHOUS, HIMCAIDLY).
 
-### Feature Importance
+**Feature Importance**
 
 Feature importance is measured as the absolute value of the standardized coefficients. Because all features were scaled before fitting, these values are directly comparable across features.
 
