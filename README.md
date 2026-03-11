@@ -2,22 +2,26 @@
 
 ## 1. Project Overview
 
-This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction supports labor market analysis, informs targeted workforce programs, and sheds light on patterns of inequality and economic mobility at the individual level, making this prediction problem practically relevant for real‑world economic decision‑making.
+This project uses **IPUMS Current Population Survey (CPS)** to predict total personal income and to identify the key socioeconomic factors associated with personal income variation.
 
-To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Random Forest, (2) Gradient Boosting, (3) Linear Regression, and (4) Elastic Net—to compare their predictive performance on tabular socioeconomic data. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
+To address this problem, we build a machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Models —(1) Random Forest, (2) Gradient Boosting, (3) Linear Regression, and (4) Elastic Net—to compare their predictive performance on socioeconomic data. 
 
+#### Research Questions
+- What is the feature that is most relevant to predicting one's income?
+- Which machine learning model is more accurate in predicting one's income with the relative features?
 
 ## 2. Dataset Description
 
 ### 2.1. Data Source
 
-This project uses microdata from the **IPUMS Current Population Survey (CPS)**, maintained by the University of Minnesota. IPUMS CPS provides U.S. Census Bureau's Current Population Survey — a monthly survey of approximately 60,000 households that serves as the primary source for U.S. labor force statistics.
+IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Population Survey — a monthly survey of approximately 150,000 households that serves as the primary source for U.S. labor force statistics.
 
 - **Extract ID**: `cps_00001`
 - **File format**: Fixed-width ASCII (`.dat`), parsed via DDI XML codebook (`.xml`)
+- **Total number of respondents**: 144,265
+- **Selected number of respondents (w/o NaN)**: 102,330
 - **Total variables in extract**: 313
 - **Selected variables for analysis**: 47 features + 1 target
-- **Source**: [IPUMS CPS](https://cps.ipums.org/cps/)
 
 ---
 
@@ -126,7 +130,7 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 |---------|-------------|----------------|
 | **MIGRATE1** | Migration status (1 year) | 1 = Same house, 3 = Different county, 5 = Different state |
 
-> **Note**: IPUMS "Not in Universe" (NIU) sentinel values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
+> **Note**: IPUMS "Not in Universe" (NIU) values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
 
 ---
 
@@ -138,7 +142,6 @@ The dataset is split into training and test sets using `sklearn.model_selection.
 |-----------|-------|
 | Split ratio | 80% train / 20% test |
 | `random_state` | 42 |
-| Stratification | None (continuous target) |
 
 The split is performed **after** cleaning (NIU replacement and median imputation), and the resulting four files are saved to `data/processed/`:
 
@@ -316,9 +319,9 @@ The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of
 
 | Metric | Random Forest  | **Gradient Boosting**  |Description  |
 |--------|----------------|------------------------|-------------|
-| MSE    | 4.98B          | 4.73B                  |lower error  |
-| MAE    | 31,322         | 29,747                 |lower error  |
-| R²     | 0.3313         | 0.3651                 |higher R²    |
+| MSE    | 4.97B          | 4.73B                  |lower error  |
+| MAE    | 31,029         | 29,747                 |lower error  |
+| R²     | 0.3328         | 0.3651                 |higher R²    |
 
 Gradient Boosting (Optuna) achieves lower MSE and MAE and a higher R² than Random Forest, indicating smaller prediction errors and stronger explanatory power.
 
@@ -393,10 +396,10 @@ Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predi
 
 | Model             | MSE           | MAE    | R²    | 
 |-------------------|---------------|--------|-------|
-| Linear Regression | 5,276,020,877 |34,199  |0.2914 |
-| Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 4,968,256,712 |31,029  |0.3328 |     
 | Gradient Boosting | 4,727,377,165 |29,747  |0.3651 | 
+| Linear Regression | 5,276,020,877 |34,199  |0.2914 |
+| Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 
 Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net extends Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data.
 
