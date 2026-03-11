@@ -398,9 +398,9 @@ These results also show that the optimal hyperparameters shift when the feature 
 | Random Forest     | 4,968,256,712 |31,029  |0.3328 |     
 | Gradient Boosting | 4,727,377,165 |29,747  |0.3651 | 
 
-Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net is an extension of Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data. 
+Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net extends Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data.
 
-In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based methods—achieve substantially better predictive performance. Random Forest reduces both MSE and MAE relative to the linear models, while Tuned Gradient Boosting achieves the lowest MAE and the highest R² overall. Its MSE remains higher than that of Random Forest, reflecting greater sensitivity to extreme high‑income outliers, a common characteristic of boosting methods.
+In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based methods—achieve substantially better predictive performance. Random Forest already reduces both MSE and MAE relative to the linear models, but Gradient Boosting further improves upon Random Forest, achieving the lowest MSE and MAE and the highest R² overall. This suggests that, given the chosen feature set and hyperparameter search space, Gradient Boosting is the most effective model for capturing the complex, nonlinear income structure in this dataset.
 
 
 #### Top 5 Feature Importances 
