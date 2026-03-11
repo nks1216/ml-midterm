@@ -311,6 +311,8 @@ We then applied `Optuna` to perform a more flexible, continuous search over the 
 | learning_rate  | 0.01–0.05 (log scale)|
 | max_depth      | 2–4                  |
 
+---
+
 **Comparison within Gradient Boosting**
 
 |Parameter/Metric |Baseline GB|Grid GB  |Optuna GB|
@@ -333,6 +335,8 @@ All Gradient Boosting models identify **RETCONT**, **OCC2010**, **EDUC**, and **
 
 The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of **UHRSWORKT**. 
 
+---
+
 **Comparison with Random Forest**
 
 | Metric | Random Forest  | **Gradient Boosting**  |Description  |
@@ -344,6 +348,8 @@ The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of
 Gradient Boosting (Optuna) achieves lower MSE and MAE and a higher R² than Random Forest, indicating smaller prediction errors and stronger explanatory power.
 
 For simplicity and clarity, only the Optuna‑based training code and final results are included in the repository, while the baseline model and the GridSearchCV setup are documented here as part of the model development process.
+
+---
 
 **Reduced Feature Analysis**
 
