@@ -516,7 +516,7 @@ This sensitivity analysis confirms that our 47-feature default model is not over
 
 Feature importance is measured as the absolute value of the standardized coefficients. Because all features were scaled before fitting, these values are directly comparable across features.
 
-> **Note**: ElasticNet coefficients are on a different scale than tree-based feature importances (which sum to 1). The ranking of top features is consistent across all models — RETCONT, EDUC, and OCC2010 appear in the top 3 across ElasticNet, Random Forest, and Gradient Boosting.
+> **Note**: ElasticNet coefficients are on a different scale than tree-based feature importances (which sum to 1). The ranking of top features is consistent across all models. RETCONT, EDUC, and OCC2010 appear in the top 3 across ElasticNet, Random Forest, and Gradient Boosting.
 
 ## 4. Comparative Evaluation of Models
 
