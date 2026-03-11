@@ -1,7 +1,18 @@
 Linear Regression Results
 =========================
 
-MSE: 5276020877.23
-RMSE: 72636.2229
-MAE: 34199.4832
-R^2: 0.2914
+Predictor Scaling:
+  StandardScaler applied to X variables before estimation
+
+R² score: 0.2914
+MSE: 5,276,020,877.23
+RMSE: 72,636.2229
+MAE: 34,199.4832
+
+Top 5 Features by Absolute Standardized Coefficient:
+---------------------------------------------------
+ 1. LABFORCE             29780.721922
+ 2. RETCONT              22199.506085
+ 3. CLASSWKR             12805.383978
+ 4. EDUC                 12180.822054
+ 5. SEX                  10913.703136
