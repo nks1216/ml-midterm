@@ -540,7 +540,7 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 | **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) |
 | **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
-| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
+| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the ElasticNet model (R² = 0.276). Points are concentrated along the perfect fit line for mid-range earners ($10k–$100k), where the model performs reasonably well. However, ElasticNet systematically overpredicts low incomes and underpredicts high incomes — visible in the wide spread at both extremes. This is expected behavior for a linear model: because ElasticNet assumes income is a weighted sum of features, it cannot capture the nonlinear interactions that drive very high or very low incomes. This limitation explains the lower R² compared to tree-based models.</sub> |
 
 ### 4.3. Top 5 Feature Importances (Comparison Table)
 
