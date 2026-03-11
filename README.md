@@ -287,9 +287,10 @@ Where:
 
 **Hyperparameter Tuning (GridSearchCV)**
 
-We first performed hyperparameter tuning using `GridSearchCV` with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, all predictions were evaluated on a **log‑transformed scale**.
+We first performed hyperparameter tuning using `GridSearchCV` with 3‑fold cross‑validation on the training set (81,864 observations and 47 features).
 
-For visualization consistency across models, we applied a **log10(1 + x)** transformation to both actual and predicted income values. This transformation reduces the influence of extreme outliers and produces clearer, more interpretable plots.
+Because income is highly skewed, model performance metrics (R², MSE, MAE) were computed on the **original income scale**, while a **log10(1 + x)** transformation was applied **only for visualization** to both actual and predicted values.
+
 
 *Search Space*
 
@@ -301,7 +302,9 @@ For visualization consistency across models, we applied a **log10(1 + x)** trans
 
 **Hyperparameter Tuning (Optuna)**
 
-We then applied `Optuna` to perform a more flexible, continuous search over the hyperparameter space. Unlike `GridSearchCV`, which evaluates a fixed grid, `Optuna` explores the space adaptively and focuses on promising regions. The same **log10(1 + x)** evaluation and visualization strategy was used to ensure comparability across tuning methods.
+We then applied `Optuna` to perform a more flexible, continuous search over the hyperparameter space. Unlike `GridSearchCV`, which evaluates a fixed grid, `Optuna` explores the space adaptively and focuses on promising regions. As with the grid search, each trial was evaluated using 3‑fold cross‑validation on the training set, and model performance metrics (R², MSE, MAE) were computed on the **original income scale**. 
+
+For visualization consistency across tuning methods, we applied the same **log10(1 + x)** transformation **only when plotting actual and predicted income values**, which stabilizes the scale, reduces the influence of extreme outliers, and produces clearer, more interpretable plots.
 
 *Search Space*
 
@@ -315,15 +318,18 @@ We then applied `Optuna` to perform a more flexible, continuous search over the 
 
 **Comparison within Gradient Boosting**
 
-|Parameter/Metric |Baseline GB|Grid GB  |Optuna GB|
-|-----------------|-----------|---------|---------|
-|n_estimators     |300        |200      |475      |
-|learning_rate    |0.05       |0.1      |0.0382   |
-|max_depth        |3          |4        |4        |
-|Test MSE         |4.80B      |4.72B    |4.73B    |
-|Test MAE         |30,158     |29,766   |29,747   |
-|Test R²          |0.3559     |0.3666   |0.3659   | 
-|Computation Time |—          |~10 min  |~14 min  |
+|Parameter/Metric    |Baseline GB|Grid GB  |Optuna GB|
+|--------------------|-----------|---------|---------|
+|n_estimators        |300        |200      |475      |
+|learning_rate       |0.05       |0.1      |0.0382   |
+|max_depth           |3          |4        |4        |
+|Test MSE            |4.80B      |4.72B    |4.73B    |
+|Test MAE            |30,158     |29,766   |29,747   |
+|Test R²             |0.3559     |0.3666   |0.3659   |
+|n_trials (effective)|-          |60       |20       |    
+|Computation Time    |-          |~10 min  |~14 min  |
+
+**Note.** Both GridSearchCV and Optuna used 3‑fold cross‑validation. GridSearchCV evaluated all 60 hyperparameter combinations (5 × 4 × 3), resulting in 180 total model fits. Optuna performed 20 adaptive trials (60 total fits). Thus, the effective number of trials is 60 for GridSearchCV and 20 for Optuna.
 
 Both tuned models (Grid GB and Optuna GB) achieve lower prediction error and higher explanatory power than the baseline model, demonstrating that hyperparameter optimization meaningfully improves Gradient Boosting performance.
 
