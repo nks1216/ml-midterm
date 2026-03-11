@@ -167,19 +167,18 @@ def plot_gb_actual_vs_predicted(
 ):
     preds = model.predict(X_test)
 
-    # Clip negatives (log scale cannot handle <= 0)
-    actual = np.clip(y_test, 1, None)
-    predicted = np.clip(preds, 1, None)
+    actual_k = np.clip(y_test / 1_000, 1.0, None)
+    predicted_k = np.clip(preds / 1_000, 1.0, None)
 
     fig, ax = plt.subplots(figsize=(8, 8))
 
-    ax.scatter(actual, predicted, alpha=0.25, s=8, color="steelblue")
+    ax.scatter(actual_k, predicted_k, alpha=0.25, s=8, color="steelblue")
 
     ax.set_xscale("log")
     ax.set_yscale("log")
 
     min_val = 1
-    max_val = max(actual.max(), predicted.max())
+    max_val = max(actual_k.max(), predicted_k.max()) * 1.1
 
     ax.set_xlim(1, max_val)
     ax.set_ylim(1, max_val)
