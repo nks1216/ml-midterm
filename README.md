@@ -600,9 +600,7 @@ Occupation (OCC2010, 0.1430) and education (EDUC, 0.1119) follow as major determ
 
 Work‑related variables—including weekly hours (UHRSWORKT 0.0307, UHRSWORK1 0.0182), employer‑paid health insurance (PAIDGH 0.0262), and industry (IND 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (NUMEMPS 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
 
-## 4.5. Key Takeaways and Recommendations
-
-### What We Found
+### 4.5. Key Takeaways and Recommendations
 
 Across all four models, three findings are consistent and robust:
 
@@ -612,21 +610,13 @@ Across all four models, three findings are consistent and robust:
 
 3. **Gender (SEX) consistently appears in the top 5** — reflecting the persistent wage gap in the U.S. labor market.
 
-### Why Tree Models Outperform Linear Models
-
-Linear Regression and Elastic Net explain approximately 28–29% of income variation (R² ≈ 0.28–0.29), while Random Forest and Gradient Boosting explain 33–37%. This gap exists because income is not a linear relationship — the return to education, for example, varies dramatically by occupation and age. Tree-based models capture these complex interactions naturally, while linear models cannot.
-
-### What ElasticNet Adds
-
-Although ElasticNet does not outperform tree models on predictive accuracy, it provides something tree models cannot: **a direct, interpretable measure of how each factor affects income**. The positive coefficient on EDUC tells us education increases income; the negative coefficient on SEX tells us being female is associated with lower predicted income, holding all else equal. This interpretability has direct policy value.
-
-### Recommendations
+Linear Regression and Elastic Net explain approximately 28–29% of income variation (R² ≈ 0.28–0.29), while Random Forest and Gradient Boosting explain 33–37%. This gap exists because income is not a linear relationship — the return to education varies dramatically by occupation and age. Tree-based models capture these complex interactions naturally, while linear models cannot. Although ElasticNet does not outperform tree models on predictive accuracy, it provides something tree models cannot: **a direct, interpretable measure of how each factor affects income**, making it valuable for policy design.
 
 Our recommendation depends on the use case. For a bank predicting loan default risk, Gradient Boosting is best. For a policymaker designing income support programs, ElasticNet is more valuable because it quantifies exactly how each factor affects income.
 
-- **For prediction**: Use Gradient Boosting. It achieves the lowest error (MAE = $29,747) and highest R² (0.365) and is robust to nonlinear income patterns.
-- **For interpretation**: Use Elastic Net or Linear Regression. Their coefficients directly quantify the income effect of each socioeconomic factor, making them valuable for policy design.
-- **For future work**: Hyperparameter tuning of ElasticNet (as explored in our sensitivity analysis) could improve feature selection and potentially close the performance gap with tree models. Adding interaction terms or log-transforming the target variable may also improve linear model performance.
+- **For prediction**: Use Gradient Boosting. It achieves the lowest error (MAE = $29,747) and highest R² (0.365).
+- **For interpretation**: Use Elastic Net or Linear Regression. Their coefficients directly quantify the income effect of each socioeconomic factor.
+- **For future work**: Hyperparameter tuning of ElasticNet, adding interaction terms, or log-transforming the target variable may improve model performance.
 
 ---
 
