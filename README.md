@@ -115,9 +115,6 @@ data/processed/
 
 - **Occupation and industry codes** are high‑dimensional and do not capture within‑category heterogeneity (e.g., experience, job role, firm type).
 
-- The dataset **does not include wealth, assets, or detailed job characteristics**, all of which are important determinants of income but unavailable in CPS microdata.
-
-
 ## 3. Modeling Approach and Individual Model Results
 
 ### 3.1. Linear Regression
@@ -153,7 +150,7 @@ Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predi
 
 ### 3.3. Random Forest
 
-Each tree independently learns a set of splitting rules from a random subset of the training data and a random subset of features. The final prediction is the **average across all 200 trees**, which reduces variance and prevents overfitting compared to a single tree.
+Each tree independently learns a set of splitting rules from a random subset of the training data and a random subset of features. The final prediction is the **average across all N trees**, which reduces variance and prevents overfitting compared to a single tree.
 
 #### Decision Tree — Simplified Example
 
@@ -185,22 +182,36 @@ At each node, the tree asks a yes/no question about one feature and routes each 
 └─────────┘   └──────────┘
 ```
 
-This single tree is repeated **200 times**, each time trained on a different random bootstrap sample of the data and a random subset of features. The final `INCTOT` prediction for any individual is the mean of all 200 trees' predictions:
+This single tree is repeated N times, each time trained on a different random bootstrap sample of the data and a random subset of features. The final `INCTOT` prediction for any individual is the mean of all trees' predictions:
 
-$$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = 200$$
+$$\hat{y} = \frac{1}{B} \sum_{b=1}^{B} T_b(\mathbf{x}), \quad B = N$$  
+where:  
+- $\hat{y}$ — predicted `INCTOT` for a given individual
+- $B$ — total number of trees in the forest (= 300 after tuning)
+- $T_b(\mathbf{x})$ — prediction from the $b$-th decision tree
+- $\mathbf{x}$ — input feature vector (47 variables for one individual)
 
-#### Model Configuration
+#### Search Space
 
-| Parameter | Value | Description |
-|-----------|-------|-------------|
-| `n_estimators` | 200 | Number of decision trees |
-| `max_depth` | 15 | Maximum depth of each tree |
+| Parameter | Candidates | Description |
+|-----------|------------|-------------|
+| `n_estimators` | 100, 200, 300 | Number of decision trees in the ensemble |
+| `max_depth` | 10, 15, 20 | Maximum depth of each tree |
+
+#### Tuning Results (w/ GridSearchCV cross validation)
+
+| Metric | Value |
+|--------|-------|
+| Best `n_estimators` | 300 |
+| Best `max_depth` | 10 |
+| Best CV $R^2$ (mean of 5 folds) | 0.3471 |
+| Test $R^2$ (held-out 20%) | 0.3328 |
 
 ---
 
 > **Note — Numerical vs. Categorical Variables**
 >
-> Random Forest treats all input variables as numeric and makes splits using a single threshold: *"Is feature $X$ less than value $t$?"* This works naturally for **numerical variables** like `AGE` or `UHRSWORK1`, where larger values carry inherent order and magnitude.
+> Random Forest treats all input variables as numeric and makes splits using a single threshold: *"Is feature X less than value t?"* This works naturally for **numerical variables** like `AGE` or `UHRSWORK1`, where larger values carry inherent order and magnitude.
 >
 > For **categorical variables** encoded as integers — such as `OCC2010` (occupation codes), `IND` (industry codes), or `REGION` — the model still applies threshold splits (e.g., `OCC2010 < 3000`). This can imply an ordering between categories that does not exist in reality. Since the primary goal of this project is to identify *which variables* matter (not *which categories* within a variable), this would suffice. 
 
@@ -332,7 +343,7 @@ CLASSWKR (class of worker).
 |-------------------|---------------|--------|-------|
 | Linear Regression | 5,276,020,877 |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
-| Random Forest     | 3,245,000,000 |32,400  |0.3310 |     
+| Random Forest     | 4,968,256,712 |31,029  |0.3328 |     
 | Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
 
 Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net is an extension of Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data. 
@@ -354,11 +365,11 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 3 | OCC2010 | 7074.13  | Occupation (2010 classification) |
 |                       | 4 | SEX     | 6974.37  | Respondent's sex |
 |                       | 5 | AGE     | 4752.53  | Respondent's age |
-| **Random Forest**     | 1 | RETCONT   | 0.2553 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1168 | Occupation (2010 classification) |
-|                       | 3 | AGE       | 0.0695 | Respondent’s age |
-|                       | 4 | EDUC      | 0.0568 | Educational attainment |
-|                       | 5 | IND       | 0.0493 | Industry |
+| **Random Forest**     | 1 | RETCONT   | 0.3564 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1392 | Occupation (2010 classification) |
+|                       | 3 | EDUC      | 0.0686 | Educational attainment |
+|                       | 4 | AGE       | 0.0539 | Respondent's age |
+|                       | 5 | IND       | 0.0375 | Industry |
 | **Gradient Boosting** | 1 | RETCONT   | 0.4377 | Retirement-related income |
 |                       | 2 | OCC2010   | 0.1436 | Occupation (2010 classification) |
 |                       | 3 | EDUC      | 0.1162 | Educational attainment |
@@ -371,8 +382,9 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |-------|----------------------|
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
 | **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
-| **Random Forest** | <img width="1175" height="1025" alt="rf_actual_vs_predicted" src="https://github.com/user-attachments/assets/a84e8cf4-31c8-421a-b35a-ed029c89b7ff" /> |
+| **Random Forest** | <img width="1175" height="1025" alt="rf_actual_vs_predicted" src="https://github.com/user-attachments/assets/461f436e-f277-47a3-b56f-2004d005084e" /> |
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
+
 
 
 ## 5. Reproducibility
