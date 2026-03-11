@@ -315,7 +315,7 @@ When comparing Grid GB and Optuna GB, neither model clearly dominates the other.
 
 All Gradient Boosting models identify **Retirement contributions** `RETCONT`, **Occupation** `OCC2010`, **Education** `EDUC`, and **Sex** `SEX` as dominant predictors.
 
-The tuned models (Grid GB and Optuna GB) include **Age** `AGE` in the top 5 instead of **Usual weekly hours** `UHRSWORKT`. 
+The tuned models (Grid GB and Optuna GB) include **Age** `AGE` in the top 5 instead of **Usual weekly hours worked (all jobs)** `UHRSWORKT`. 
 
 ---
 
