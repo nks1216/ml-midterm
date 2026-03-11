@@ -33,55 +33,98 @@ This project uses microdata from the **IPUMS Current Population Survey (CPS)**, 
 
 47 features were selected from the 313-variable extract, grouped into 8 categories.
 
-| # | Category | Variable | Description |
-|---|----------|----------|-------------|
-| 1 | Demographics | `AGE` | Age |
-| 2 | | `SEX` | Sex |
-| 3 | | `RACE` | Race |
-| 4 | | `MARST` | Marital status |
-| 5 | | `VETSTAT` | Veteran status |
-| 6 | | `RELATE` | Relationship to household head |
-| 7 | | `POPSTAT` | Adult civilian, armed forces, or child |
-| 8 | | `HISPAN` | Hispanic origin |
-| 9 | | `NATIVITY` | Foreign-born or native |
-| 10 | | `CITIZEN` | Citizenship status |
-| 11 | | `BPL` | Birthplace |
-| 12 | Education | `EDUC` | Educational attainment recode |
-| 13 | | `SCHLCOLL` | School or college attendance |
-| 14 | Family | `FAMSIZE` | Number of family members |
-| 15 | | `FAMKIND` | Kind of family unit |
-| 16 | Geography | `REGION` | Census region |
-| 17 | | `STATEFIP` | State (FIPS code) |
-| 18 | | `METRO` | Metropolitan status |
-| 19 | | `CBSASZ` | Metro area size |
-| 20 | Employment | `EMPSTAT` | Employment status |
-| 21 | | `LABFORCE` | Labor force status |
-| 22 | | `CLASSWKR` | Class of worker |
-| 23 | | `OCC2010` | Occupation (2010 basis) |
-| 24 | | `IND` | Industry |
-| 25 | | `UHRSWORKT` | Hours usually worked per week (all jobs) |
-| 26 | | `UHRSWORK1` | Hours usually worked per week (main job) |
-| 27 | | `WKSTAT` | Full/part-time status |
-| 28 | | `NUMEMPS` | Number of employers last year |
-| 29 | | `FIRMSIZE` | Number of employees at firm |
-| 30 | | `PENSION` | Pension plan at work |
-| 31 | | `PAIDHOUR` | Paid by the hour |
-| 32 | | `UNION` | Union membership |
-| 33 | | `SRCEARN` | Source of earnings from longest job |
-| 34 | | `RETCONT` | Retirement contributions |
-| 35 | Housing | `OWNERSHP` | Ownership of dwelling |
-| 36 | | `UNITSSTR` | Units in structure |
-| 37 | | `PUBHOUS` | Living in public housing |
-| 38 | | `RENTSUB` | Government rent subsidy |
-| 39 | Gov. Benefits | `FOODSTMP` | Food stamp recipiency |
-| 40 | | `HEATSUB` | Received energy subsidy |
-| 41 | Health Insurance | `ANYCOVLY` | Any health insurance coverage last year |
-| 42 | | `PHINSUR` | Private health insurance last year |
-| 43 | | `GRPCOVLY` | Employment-based group health last year |
-| 44 | | `HIMCAIDLY` | Covered by Medicaid last year |
-| 45 | | `HIMCARELY` | Covered by Medicare last year |
-| 46 | | `PAIDGH` | Employer paid for group health plan |
-| 47 | Migration | `MIGRATE1` | Migration status (1 year) |
+### 1. Demographics
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **AGE** | Age in years | 25 → 25 years old |
+| **SEX** | Gender | 1 = Male, 2 = Female |
+| **RACE** | Race category | 100 = White, 200 = Black, 651 = Asian |
+| **MARST** | Marital status | 1 = Married (spouse present), 4 = Divorced, 6 = Never married |
+| **VETSTAT** | Veteran status | 1 = No service, 2 = Veteran |
+| **RELATE** | Relationship to household head | 101 = Head, 201 = Spouse, 301 = Child |
+| **POPSTAT** | Population status | 1 = Adult civilian, 2 = Armed forces, 3 = Child |
+| **HISPAN** | Hispanic origin | 0 = Not Hispanic, 100 = Mexican, 200 = Puerto Rican |
+| **NATIVITY** | Native/foreign-born | 1 = Native, 4/5 = Foreign-born |
+| **CITIZEN** | Citizenship | 1 = Born in U.S., 4 = Naturalized, 5 = Not a citizen |
+| **BPL** | Birthplace | 09900 = U.S., 50220 = Korea |
+
+### 2. Education
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **EDUC** | Educational attainment | 073 = High school diploma, 111 = BA, 123 = MA |
+| **SCHLCOLL** | School/college attendance | 1 = HS full-time, 3 = College full-time, 5 = Not in school |
+
+### 3. Family
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **FAMSIZE** | Family size | 1, 2, 3… |
+| **FAMKIND** | Family type | 1 = Husband-wife, 2 = Male head, 3 = Female head |
+
+### 4. Geography
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **REGION** | Census region | 11 = Northeast, 21 = Midwest, 31 = South, 41 = West |
+| **STATEFIP** | State FIPS | 06 = CA, 36 = NY, 48 = TX |
+| **METRO** | Metropolitan status | 1 = Non-metro, 2 = Central city, 3 = Outside central city |
+| **CBSASZ** | Metro area size | 0 = NIU, 6 = 5M+ |
+
+### 5. Employment
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **EMPSTAT** | Employment status | 10 = At work, 21 = Unemployed, 32 = Retired |
+| **LABFORCE** | Labor force status | 1 = No, 2 = Yes |
+| **CLASSWKR** | Class of worker | 10 = Self-employed, 21 = Private, 25 = Federal |
+| **OCC2010** | Occupation code | 0010 = CEO |
+| **IND** | Industry code | 0170 = Agriculture |
+| **UHRSWORKT** | Usual weekly hours (all jobs) | Actual hours |
+| **UHRSWORK1** | Usual weekly hours (main job) | Actual hours |
+| **WKSTAT** | Work status | 11 = Full-time, 21 = PT involuntary, 22 = PT voluntary |
+| **NUMEMPS** | Number of employers | 1, 2, 3… |
+| **FIRMSIZE** | Firm size | 1 = <25, 5 = 100–499, 9 = 1000+ |
+| **PENSION** | Pension coverage | 1 = No, 2 = Yes |
+| **PAIDHOUR** | Paid hourly | 1 = No, 2 = Yes |
+| **UNION** | Union membership | 1 = No union, 2 = Member, 3 = Covered |
+| **SRCEARN** | Source of earnings | 1 = Wage/salary, 2 = Self-employed |
+| **RETCONT** | Retirement contributions | 1 = No, 2 = Yes |
+| **PAIDGH** | Employer-paid group health | 1 = No, 21 = All, 22 = Part |
+
+### 6. Housing
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **OWNERSHP** | Home ownership | 10 = Owned, 20 = Rented |
+| **UNITSSTR** | Units in structure | 01 = Mobile home, 03 = Single family, 10 = 5–9 units |
+| **PUBHOUS** | Public housing | 1 = No, 2 = Yes |
+| **RENTSUB** | Rent subsidy | 1 = No, 2 = Yes |
+
+### 7. Government Benefits
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **FOODSTMP** | SNAP recipiency | 1 = No, 2 = Yes |
+| **HEATSUB** | Energy subsidy | 1 = No, 2 = Yes |
+
+### 8. Health Insurance
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **ANYCOVLY** | Any coverage last year | 1 = No, 2 = Yes |
+| **PHINSUR** | Private insurance | 1 = No, 2 = Yes |
+| **GRPCOVLY** | Group insurance | 1 = No, 2 = Yes |
+| **HIMCAIDLY** | Medicaid | 1 = No, 2 = Yes |
+| **HIMCARELY** | Medicare | 1 = No, 2 = Yes |
+| **PAIDGH** | Employer-paid group health | 1 = No, 21 = All, 22 = Part |
+
+### 9. Migration
+
+| Variable | Description | Example Codes |
+|---------|-------------|----------------|
+| **MIGRATE1** | Migration status (1 year) | 1 = Same house, 3 = Different county, 5 = Different state |
 
 > **Note**: IPUMS "Not in Universe" (NIU) sentinel values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
 
