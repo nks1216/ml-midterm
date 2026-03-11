@@ -10,6 +10,8 @@ To address this problem, we build a machine learning pipeline that includes data
 - What is the feature that is most relevant to predicting one's income?
 - Which machine learning model is more accurate in predicting one's income with the relative features?
 
+---
+
 ## 2. Dataset Description
 
 ### 2.1. Data Source
@@ -160,6 +162,8 @@ data/processed/
 - **Top‑coded high incomes** limit the model’s ability to learn extreme values and reduce variation in the upper tail.
 
 - **Occupation and industry codes** are high‑dimensional and do not capture within‑category heterogeneity (e.g., experience, job role, firm type).
+
+---
 
 ## 3. Modeling Approach and Individual Model Results
 
@@ -358,6 +362,7 @@ Considering that the reduced model preserves most of the predictive power while 
 
 These results also show that the optimal hyperparameters shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors.
 
+---
 
 ### 3.3. Linear Regression
 
@@ -383,6 +388,8 @@ Because the predictors are measured on different scales, we standardized the inp
 **Why this model matters**
 
 Linear Regression is transparent, easy to interpret, and computationally efficient. However, it assumes additive linear relationships and cannot naturally capture nonlinearities or complex interactions among predictors. For income data, this can lead to underfitting relative to more flexible tree-based models.
+
+---
 
 ### 3.4. Elastic Net (New Model)
 
@@ -518,6 +525,8 @@ Feature importance is measured as the absolute value of the standardized coeffic
 
 > **Note**: ElasticNet coefficients are on a different scale than tree-based feature importances (which sum to 1). The ranking of top features is consistent across all models. RETCONT, EDUC, and OCC2010 appear in the top 3 across ElasticNet, Random Forest, and Gradient Boosting.
 
+---
+
 ## 4. Comparative Evaluation of Models
 
 ### 4.1. Performance Metrics (MSE, MAE, and R²) 
@@ -533,6 +542,8 @@ Across the four models, Linear Regression and Elastic Net perform the weakest, s
 
 In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based methods—achieve substantially better predictive performance. Random Forest already reduces both MSE and MAE relative to the linear models, but Gradient Boosting further improves upon Random Forest, achieving the lowest MSE and MAE and the highest R² overall. This suggests that, given the chosen feature set and hyperparameter search space, Gradient Boosting is the most effective model for capturing the complex, nonlinear income structure in this dataset.
 
+---
+
 ### 4.2. Actual vs Predicted (4 models)
 
 | Model | Actual vs. Predicted |
@@ -541,6 +552,8 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 | **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the Gradient Boosting model (R² = 0.365). The model captures nonlinear income patterns well, with many observations falling close to the 45‑degree line. The wider spread among low‑income observations reflects the high variability and noise in the lower tail of the income distribution, which becomes more visually pronounced on a log scale. Despite this dispersion, Gradient Boosting delivers noticeably better overall predictive accuracy than linear models, especially across the middle and upper parts of the income distribution.</sub> |
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
 | **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the ElasticNet model (R² = 0.276). Points are concentrated along the perfect fit line for mid-range earners ($10k–$100k), where the model performs reasonably well. However, ElasticNet systematically overpredicts low incomes and underpredicts high incomes — visible in the wide spread at both extremes. This is expected behavior for a linear model: because ElasticNet assumes income is a weighted sum of features, it cannot capture the nonlinear interactions that drive very high or very low incomes. This limitation explains the lower R² compared to tree-based models.</sub> |
+
+---
 
 ### 4.3. Top 5 Feature Importances (Comparison Table)
 
@@ -567,6 +580,8 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 4 | SEX     | 6,974  | Respondent's sex |
 |                       | 5 | AGE     | 4,753  | Respondent's age |
 
+---
+
 ### 4.4. Top 20 Feature Importances (Only for the Best Model: Gradient Boosting)
 ![Gradient Boosting](reports/figures/gb_feature_importance.png)
 
@@ -578,6 +593,7 @@ Occupation (OCC2010, 0.1430) and education (EDUC, 0.1119) follow as major determ
 
 Work‑related variables—including weekly hours (UHRSWORKT 0.0307, UHRSWORK1 0.0182), employer‑paid health insurance (PAIDGH 0.0262), and industry (IND 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (NUMEMPS 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
 
+---
 
 ## 5. Reproducibility
 
@@ -609,6 +625,8 @@ python3 src/models/model_en.py
 ```
 For convenience, individual model scripts are provided.
 
+---
+
 ## 6. Limitations and Future Improvements
 
 **Modeling Limitations**
@@ -620,6 +638,8 @@ For convenience, individual model scripts are provided.
 - **Linear models underfit** because they cannot capture nonlinear interactions among socioeconomic variables.
 
 - **All models are predictive rather than causal**, meaning the results cannot be interpreted as estimating the causal effect of any feature on income.
+
+---
 
 ## 7. Collaboration and Workflow
 
