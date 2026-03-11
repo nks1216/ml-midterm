@@ -4,7 +4,7 @@
 
 This project uses CPS microdata to predict total personal income and to identify the key socioeconomic factors associated with personal income variation. Understanding the determinants of personal income has important policy implications: accurate prediction supports labor market analysis, informs targeted workforce programs, and sheds light on patterns of inequality and economic mobility at the individual level, making this prediction problem practically relevant for real‑world economic decision‑making.
 
-To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Linear Regression, (2) Elastic Net, (3) Random Forest, and (4) Gradient Boosting—to compare their predictive performance on tabular socioeconomic data. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
+To address this problem, we build a complete machine learning pipeline that includes data cleaning, feature engineering, model training, and model evaluation. Several models with different inductive biases are implemented—(1) Random Forest, (2) Gradient Boosting, (3) Linear Regression, and (4) Elastic Net—to compare their predictive performance on tabular socioeconomic data. The goal is to identify the most effective modeling approach and provide a clear, reproducible workflow.
 
 
 ## 2. Dataset Description
@@ -160,38 +160,7 @@ data/processed/
 
 ## 3. Modeling Approach and Individual Model Results
 
-### 3.1. Linear Regression
-
-**Model Concept**
-
-Linear Regression serves as the baseline model for interpretability and comparison. It estimates a linear relationship between total personal income (`INCTOT`) and the selected socioeconomic predictors by fitting coefficients that minimize the sum of squared residuals. This provides a simple benchmark against which more flexible nonlinear models can be evaluated.
-
-Formally, the model can be written as:
-
-$$
-y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + \varepsilon_i
-$$
-
-where:
-
-- $y_i$ is total personal income for individual $i$
-- $x_{ij}$ is predictor $j$ for individual $i$
-- $\beta_j$ measures the marginal linear contribution of predictor $j$
-- $\varepsilon_i$ is the error term
-
-Because the predictors are measured on different scales, we standardized the input features before estimating the model. This allows coefficient magnitudes to be compared across predictors and lets us use the absolute value of the coefficients as a relative feature-importance measure within the Linear Regression specification.
-
-**Why this model matters**
-
-Linear Regression is transparent, easy to interpret, and computationally efficient. However, it assumes additive linear relationships and cannot naturally capture nonlinearities or complex interactions among predictors. For income data, this can lead to underfitting relative to more flexible tree-based models.
-
-### 3.2. Elastic Net (New Model)
-
-This model serves as our required "new technique" not covered in class.
-
-Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predictors more effectively than Lasso or Ridge alone. It provides a more stable coefficient structure and performs feature shrinkage, which is useful for high‑dimensional socioeconomic data.
-
-### 3.3. Random Forest
+### 3.1. Random Forest
 
 Each tree independently learns a set of splitting rules from a random subset of the training data and a random subset of features. The final prediction is the **average across all N trees**, which reduces variance and prevents overfitting compared to a single tree.
 
@@ -260,7 +229,7 @@ where:
 
 ---
 
-### 3.4. Gradient Boosting
+### 3.2. Gradient Boosting
 
 **Model Concept**
 
@@ -387,6 +356,37 @@ Considering that the reduced model preserves most of the predictive power while 
 These results also show that the optimal hyperparameters shift when the feature space is reduced, indicating that the model adapts its preferred complexity to the available predictors.
 
 
+### 3.3. Linear Regression
+
+**Model Concept**
+
+Linear Regression serves as the baseline model for interpretability and comparison. It estimates a linear relationship between total personal income (`INCTOT`) and the selected socioeconomic predictors by fitting coefficients that minimize the sum of squared residuals. This provides a simple benchmark against which more flexible nonlinear models can be evaluated.
+
+Formally, the model can be written as:
+
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + \varepsilon_i
+$$
+
+where:
+
+- $y_i$ is total personal income for individual $i$
+- $x_{ij}$ is predictor $j$ for individual $i$
+- $\beta_j$ measures the marginal linear contribution of predictor $j$
+- $\varepsilon_i$ is the error term
+
+Because the predictors are measured on different scales, we standardized the input features before estimating the model. This allows coefficient magnitudes to be compared across predictors and lets us use the absolute value of the coefficients as a relative feature-importance measure within the Linear Regression specification.
+
+**Why this model matters**
+
+Linear Regression is transparent, easy to interpret, and computationally efficient. However, it assumes additive linear relationships and cannot naturally capture nonlinearities or complex interactions among predictors. For income data, this can lead to underfitting relative to more flexible tree-based models.
+
+### 3.4. Elastic Net (New Model)
+
+This model serves as our required "new technique" not covered in class.
+
+Elastic Net combines L1 and L2 penalties, allowing it to handle correlated predictors more effectively than Lasso or Ridge alone. It provides a more stable coefficient structure and performs feature shrinkage, which is useful for high‑dimensional socioeconomic data.
+
 ## 4. Comparative Evaluation of Models
 
 #### MSE, MAE, and R² 
@@ -407,16 +407,6 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 | Model | Rank | Feature | Importance | Description |
 |-------|------|----------|-------------|-------------|
-| **Linear Regression** | 1 | LABFORCE | 29780.72 | Labor force status | 
-|                       | 2 | RETCONT | 22199.51 | Retirement contributions |
-|                       | 3 | CLASSWKR | 12805.38 | Class of worker |
-|                       | 4 | EDUC | 12180.82 | Educational attainment |
-|                       | 5 | SEX | 10913.70 | Respondent's sex |
-| **Elastic Net**       | 1 | RETCONT | 15792 | Retirement contributions |
-|                       | 2 | EDUC    | 9166  | Educational attainment |
-|                       | 3 | OCC2010 | 7074  | Occupation (2010 classification) |
-|                       | 4 | SEX     | 6974  | Respondent's sex |
-|                       | 5 | AGE     | 4753  | Respondent's age |
 | **Random Forest**     | 1 | RETCONT   | 0.3564 | Retirement-related income |
 |                       | 2 | OCC2010   | 0.1392 | Occupation (2010 classification) |
 |                       | 3 | EDUC      | 0.0686 | Educational attainment |
@@ -427,16 +417,25 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 3 | EDUC      | 0.1119 | Educational attainment |
 |                       | 4 | SEX       | 0.0351 | Respondent’s sex |
 |                       | 5 | AGE       | 0.0347 | Respondent's age |
+| **Linear Regression** | 1 | LABFORCE | 29780.72 | Labor force status | 
+|                       | 2 | RETCONT | 22199.51 | Retirement contributions |
+|                       | 3 | CLASSWKR | 12805.38 | Class of worker |
+|                       | 4 | EDUC | 12180.82 | Educational attainment |
+|                       | 5 | SEX | 10913.70 | Respondent's sex |
+| **Elastic Net**       | 1 | RETCONT | 15792 | Retirement contributions |
+|                       | 2 | EDUC    | 9166  | Educational attainment |
+|                       | 3 | OCC2010 | 7074  | Occupation (2010 classification) |
+|                       | 4 | SEX     | 6974  | Respondent's sex |
+|                       | 5 | AGE     | 4753  | Respondent's age |
 
 
 #### Actual vs Predicted 
 | Model | Actual vs. Predicted |
 |-------|----------------------|
+| **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) |
+| **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
 | **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
-| **Random Forest** | <img width="1175" height="1025" alt="rf_actual_vs_predicted" src="https://github.com/user-attachments/assets/461f436e-f277-47a3-b56f-2004d005084e" /> |
-| **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
-
 
 
 ## 5. Reproducibility
@@ -461,11 +460,11 @@ Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuL
 ### 5.4 Run the code
 ```bash
 python3 src/data_clean.py
-python3 src/models/model_linear.py
-python3 src/models/model_en.py
 python3 src/models/model_rf.py
 python3 src/models/model_gb.py
 python3 src/models/model_gb_top20.py
+python3 src/models/model_linear.py
+python3 src/models/model_en.py
 ```
 For convenience, individual model scripts are provided.
 
@@ -473,11 +472,11 @@ For convenience, individual model scripts are provided.
 
 **Modeling Limitations**
 
-- **Linear models underfit** because they cannot capture nonlinear interactions among socioeconomic variables.
-
 - **Tree‑based models cannot extrapolate** beyond the range of observed incomes, causing predictions for unusually high values to flatten out.
 
 - **Gradient Boosting is sensitive** to outliers and hyperparameter choices, requiring careful tuning and validation.
+
+- **Linear models underfit** because they cannot capture nonlinear interactions among socioeconomic variables.
 
 - **All models are predictive rather than causal**, meaning the results cannot be interpreted as estimating the causal effect of any feature on income.
 
