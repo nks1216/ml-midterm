@@ -313,9 +313,9 @@ When comparing Grid GB and Optuna GB, neither model clearly dominates the other.
 
 **Top 5 Feature Importance within Gradient Boosting**
 
-All Gradient Boosting models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
+All Gradient Boosting models identify **Retirement contributions** `RETCONT`, **Occupation** `OCC2010`, **Education** `EDUC`, and **Sex** `SEX` as dominant predictors.
 
-The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of **UHRSWORKT**. 
+The tuned models (Grid GB and Optuna GB) include **Age** `AGE` in the top 5 instead of **Usual weekly hours** `UHRSWORKT`. 
 
 ---
 
@@ -594,11 +594,11 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 Gradient Boosting places overwhelming weight on three variables—retirement contribution, occupation, and education —which together dominate the model’s predictive structure. 
 
-Retirement contributions (RETCONT, 0.4397) represents the amount an individual contributes to tax‑advantaged retirement accounts such as 401(k) or IRA. Because these contributions typically scale with income, RETCONT acts as a strong proxy for earnings and naturally emerges as the single most influential predictor.
+Retirement contributions (`RETCONT`, 0.4397) represents the amount an individual contributes to tax‑advantaged retirement accounts such as 401(k) or IRA. Because these contributions typically scale with income, RETCONT acts as a strong proxy for earnings and naturally emerges as the single most influential predictor.
 
-Occupation (OCC2010, 0.1430) and education (EDUC, 0.1119) follow as major determinants, reflecting the strong link between job type, skill level, and income. Demographic factors such as sex (SEX, 0.0351) and age (AGE, 0.0347) also contribute meaningfully, capturing systematic differences in labor‑market outcomes. 
+Occupation (`OCC2010`, 0.1430) and education (`EDUC`, 0.1119) follow as major determinants, reflecting the strong link between job type, skill level, and income. Demographic factors such as sex (`SEX`, 0.0351) and age (`AGE`, 0.0347) also contribute meaningfully, capturing systematic differences in labor‑market outcomes. 
 
-Work‑related variables—including weekly hours (UHRSWORKT 0.0307, UHRSWORK1 0.0182), employer‑paid health insurance (PAIDGH 0.0262), and industry (IND 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (NUMEMPS 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
+Work‑related variables—including weekly hours (`UHRSWORKT` 0.0307, `UHRSWORK1` 0.0182), employer‑paid health insurance (`PAIDGH` 0.0262), and industry (`IND` 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (`NUMEMPS` 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
 
 ### 4.5. Key Takeaways and Recommendations
 
