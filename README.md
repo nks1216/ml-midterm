@@ -439,7 +439,14 @@ With these settings, **ElasticNet retained all 47 features** — no features wer
 
 **Regularization Sensitivity Analysis**
 
-To understand how the penalty affects feature selection, we tested increasing values of alpha and l1_ratio:
+With default settings (alpha=1, l1_ratio=0.5), ElasticNet retained all 
+47 features. To understand how the penalty affects feature selection, we 
+first increased alpha while keeping l1_ratio fixed at 0.5 — but no features 
+were dropped even at alpha=500. This revealed that the L2 (Ridge) component 
+was protecting all features from elimination. We then increased l1_ratio 
+toward 1.0 to shift the balance toward L1 (Lasso), which is the penalty 
+that actually zeros out features. This combination of high alpha and high 
+l1_ratio finally began eliminating features:
 
 | alpha | l1_ratio | Features Dropped |
 |-------|----------|-----------------|
