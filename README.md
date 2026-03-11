@@ -122,7 +122,28 @@ data/processed/
 
 ### 3.1. Linear Regression
 
-Baseline model for interpretability and comparison.
+**Model Concept**
+
+Linear Regression serves as the baseline model for interpretability and comparison. It estimates a linear relationship between total personal income (`INCTOT`) and the selected socioeconomic predictors by fitting coefficients that minimize the sum of squared residuals. This provides a simple benchmark against which more flexible nonlinear models can be evaluated.
+
+Formally, the model can be written as:
+
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip} + \varepsilon_i
+$$
+
+where:
+
+- $y_i$ is total personal income for individual $i$
+- $x_{ij}$ is predictor $j$ for individual $i$
+- $\beta_j$ measures the marginal linear contribution of predictor $j$
+- $\varepsilon_i$ is the error term
+
+Because the predictors are measured on different scales, we standardized the input features before estimating the model. This allows coefficient magnitudes to be compared across predictors and lets us use the absolute value of the coefficients as a relative feature-importance measure within the Linear Regression specification.
+
+**Why this model matters**
+
+Linear Regression is transparent, easy to interpret, and computationally efficient. However, it assumes additive linear relationships and cannot naturally capture nonlinearities or complex interactions among predictors. For income data, this can lead to underfitting relative to more flexible tree-based models.
 
 ### 3.2. Elastic Net (New Model)
 
@@ -323,11 +344,11 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 | Model | Rank | Feature | Importance | Description |
 |-------|------|----------|-------------|-------------|
-| **Linear Regression** | 1 | N/A | N/A | Raw coefficients are not directly comparable without standardization | 
-|                       | 2 | N/A | N/A | N/A |
-|                       | 3 | N/A | N/A | N/A |
-|                       | 4 | N/A | N/A | N/A |
-|                       | 5 | N/A | N/A | N/A |
+| **Linear Regression** | 1 | LABFORCE | 29780.72 | Labor force status | 
+|                       | 2 | RETCONT | 22199.51 | Retirement contributions |
+|                       | 3 | CLASSWKR | 12805.38 | Class of worker |
+|                       | 4 | EDUC | 12180.82 | Educational attainment |
+|                       | 5 | SEX | 10913.70 | Respondent's sex |
 | **Elastic Net**       | 1 | RETCONT | 15792.15 | Retirement contributions |
 |                       | 2 | EDUC    | 9165.76  | Educational attainment |
 |                       | 3 | OCC2010 | 7074.13  | Occupation (2010 classification) |
@@ -348,7 +369,7 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 #### Actual vs Predicted 
 | Model | Actual vs. Predicted |
 |-------|----------------------|
-| **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png) |
+| **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
 | **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png) |
 | **Random Forest** | <img width="1175" height="1025" alt="rf_actual_vs_predicted" src="https://github.com/user-attachments/assets/a84e8cf4-31c8-421a-b35a-ed029c89b7ff" /> |
 | **Gradient Boosting** |![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)
@@ -358,7 +379,7 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 ### 5.1. Clone the repository  
 ```
-git clone <repo-url>
+git clone https://github.com/nks1216/ml-midterm.git
 cd ml-midterm
 ```
 
