@@ -384,7 +384,7 @@ These results also show that the optimal hyperparameters shift when the feature 
 | Linear Regression | 5,276,020,877 |34,199  |0.2914 |
 | Elastic Net       | 5,390,603,768 |33,895  |0.2760 |
 | Random Forest     | 4,968,256,712 |31,029  |0.3328 |     
-| Gradient Boosting | 4,716,257,047 |29,766  |0.3666 | 
+| Gradient Boosting | 4,727,377,165 |29,747  |0.3651 | 
 
 Across the four models, Linear Regression and Elastic Net perform the weakest, showing low R² values and failing to capture the nonlinear structure of income. Although Elastic Net is an extension of Linear Regression with regularization, both remain linear models and therefore struggle to model complex interactions and nonlinear patterns in the data. 
 
@@ -400,21 +400,21 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 3 | CLASSWKR | 12805.38 | Class of worker |
 |                       | 4 | EDUC | 12180.82 | Educational attainment |
 |                       | 5 | SEX | 10913.70 | Respondent's sex |
-| **Elastic Net**       | 1 | RETCONT | 15792.15 | Retirement contributions |
-|                       | 2 | EDUC    | 9165.76  | Educational attainment |
-|                       | 3 | OCC2010 | 7074.13  | Occupation (2010 classification) |
-|                       | 4 | SEX     | 6974.37  | Respondent's sex |
-|                       | 5 | AGE     | 4752.53  | Respondent's age |
+| **Elastic Net**       | 1 | RETCONT | 15792 | Retirement contributions |
+|                       | 2 | EDUC    | 9166  | Educational attainment |
+|                       | 3 | OCC2010 | 7074  | Occupation (2010 classification) |
+|                       | 4 | SEX     | 6974  | Respondent's sex |
+|                       | 5 | AGE     | 4753  | Respondent's age |
 | **Random Forest**     | 1 | RETCONT   | 0.3564 | Retirement-related income |
 |                       | 2 | OCC2010   | 0.1392 | Occupation (2010 classification) |
 |                       | 3 | EDUC      | 0.0686 | Educational attainment |
 |                       | 4 | AGE       | 0.0539 | Respondent's age |
 |                       | 5 | IND       | 0.0375 | Industry |
-| **Gradient Boosting** | 1 | RETCONT   | 0.4377 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1436 | Occupation (2010 classification) |
-|                       | 3 | EDUC      | 0.1162 | Educational attainment |
-|                       | 4 | SEX       | 0.0340 | Respondent’s sex |
-|                       | 5 | AGE       | 0.0332 | Respondent's age |
+| **Gradient Boosting** | 1 | RETCONT   | 0.4397 | Retirement-related income |
+|                       | 2 | OCC2010   | 0.1430 | Occupation (2010 classification) |
+|                       | 3 | EDUC      | 0.1119 | Educational attainment |
+|                       | 4 | SEX       | 0.0351 | Respondent’s sex |
+|                       | 5 | AGE       | 0.0347 | Respondent's age |
 
 
 #### Actual vs Predicted 
