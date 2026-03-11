@@ -212,7 +212,9 @@ Where:
 
 **Hyperparameter Tuning (GridSearchCV)**
 
-To improve model performance, we performed hyperparameter tuning using `GridSearchCV` with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, predictions were evaluated on a **log‑transformed** scale to reduce the influence of extreme outliers.
+We first performed hyperparameter tuning using `GridSearchCV` with 3‑fold cross‑validation on the training set (81,864 observations and 47 features). Because income is highly skewed, all predictions were evaluated on a **log‑transformed scale**.
+
+For visualization consistency across models, we applied a **log10(1 + x)** transformation to both actual and predicted income values. This transformation reduces the influence of extreme outliers and produces clearer, more interpretable plots.
 
 *Search Space*
 
@@ -222,54 +224,52 @@ To improve model performance, we performed hyperparameter tuning using `GridSear
 | learning_rate  | 0.01, 0.03, 0.05, 0.1     |
 | max_depth      | 2, 3, 4                   |
 
-*Optimal Hyperparameter*
+**Hyperparameter Tuning (Optuna)**
 
-| Hyperparameter | Best Value   |
-|----------------|--------------|
-| n_estimators   | 200          |
-| learning_rate  | 0.1          |
-| max_depth      | 4            |
+We then applied `Optuna` to perform a more flexible, continuous search over the hyperparameter space. Unlike `GridSearchCV`, which evaluates a fixed grid, `Optuna` explores the space adaptively and focuses on promising regions. The same **log10(1 + x)** evaluation and visualization strategy was used to ensure comparability across tuning methods.
 
-These values balance model complexity and generalization by allowing deeper interactions while maintaining stable learning dynamics.
+*Search Space*
 
-**Model Performance**
+| Hyperparameter | Value Tested         |
+|----------------|----------------------|
+| n_estimators   | 100–500              | 
+| learning_rate  | 0.01–0.05 (log scale)|
+| max_depth      | 2–4                  |
 
-Using the tuned hyperparameters, the model achieved:
+**Comparison within Gradient Boosting**
 
-- Test MSE: 4.72B
-- Test MAE: 29,766
-- Test R²: 0.3666
+|Parameter/Metric |Baseline GB|Grid GB  |Optuna GB|
+|-----------------|-----------|---------|---------|
+|n_estimators     |300        |200      |385      |
+|learning_rate    |0.05       |0.1      |0.0493   |
+|max_depth        |3          |4        |4        |
+|Test MSE         |4.80B      |4.72B    |4.72B    |
+|Test MAE         |30,158     |29,766   |29,687   |
+|Test R²          |0.3559     |0.3666   |0.3659   | 
+|Computation Time |—          |~10 min  |~14 min  |
 
-**Comparison with Baseline Gradient Boosting**
+Both tuned models (Grid GB and Optuna GB) achieve lower prediction error and higher explanatory power than the baseline model, demonstrating that hyperparameter optimization meaningfully improves Gradient Boosting performance.
 
-|Parameter/Metric|Baseline GB|**Tuned GB**|Description               |
-|----------------|-----------|------------|--------------------------|
-|n_estimators    |300        |200         |fewer but sufficient trees|
-|learning_rate   |0.05       |0.1         |faster learning           |
-|max_depth       |3          |4           |deeper interactions       |
-|Test MSE        |4.80B      |4.72B       |lower error               |
-|Test MAE        |30,158     |29,766      |lower error               |
-|Test R²         |0.3559     |0.3666      |higher R²                 | 
+When comparing Grid GB and Optuna GB, neither model clearly dominates the other. Their performance differences are small, and the results depend heavily on the chosen hyperparameter search space. Expanding or narrowing the search ranges would likely shift the optimal configuration and the resulting metrics. Ultimately, there is a trade‑off between achieving the best possible performance and minimizing computation time.
 
-Top 5 Feature Importance (Baseline GB vs. Tuned GB)
+*Top 5 Feature Importance within Gradient Boosting*
 
-- Both models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
+- All Gradient Boosting models identify **RETCONT**, **OCC2010**, **EDUC**, and **SEX** as dominant predictors.
 
-- The tuned model places **AGE** in the top 5 instead of **UHRSWORKT**, reflecting deeper interactions captured by the increased tree depth (`max_depth=4`).
-
-The tuned model provides higher explanatory power and lower average error, indicating that hyperparameter optimization meaningfully improves predictive performance. 
-
-Baseline Gradient Boosting results are included for comparison, but the final model used in this project is the tuned version described above.
+- The tuned models (Grid GB and Optuna GB) include **AGE** in the top 5 instead of **UHRSWORKT**. 
 
 **Comparison with Random Forest**
 
-| Metric | Random Forest  | **Tuned GB**  |Description  |
-|--------|----------------|---------------|-------------|
-| MSE    | 3.25B          | 4.72B         |higher error |
-| MAE    | 32,400         | 29,766        |lower error  |
-| R²     | 0.3310         | 0.3666        |higher R²    |
+| Metric | Random Forest  | **Gradient Boosting**  |Description  |
+|--------|----------------|------------------------|-------------|
+| MSE    | 4.98B          | 4.72B                  |lower error  |
+| MAE    | 31,322         | 29,687                 |lower error  |
+| R²     | 0.3313         | 0.3659                 |higher R²    |
 
-Gradient Boosting exhibits a higher MSE than Random Forest, indicating that it makes larger errors on a small number of very high‑income observations. However, it achieves a lower MAE, meaning that its typical prediction errors are smaller. In addition, Gradient Boosting attains a higher R², suggesting that it explains more of the overall variation in income. This pattern reflects a common trade‑off in boosting models: they reduce average errors and improve explanatory power but remain sensitive to extreme outliers due to their sequential learning structure.
+Gradient Boosting (Optuna) achieves lower MSE and MAE and a higher R² than Random Forest, indicating smaller prediction errors and stronger explanatory power.
+
+For simplicity and clarity, only the Optuna‑based training code and final results are included in the repository, while the baseline model and the GridSearchCV setup are documented here as part of the model development process.
+
 
 **Reduced Feature Analysis**
 

@@ -42,10 +42,11 @@ def train_gradient_boosting(X_train, y_train, n_trials=20):
 
     def objective(trial):
         params = {
-            "n_estimators": trial.suggest_int("n_estimators", 100, 400),
-            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.1, log=True),
+            "n_estimators": trial.suggest_int("n_estimators", 100, 500),
+            "learning_rate": trial.suggest_float("learning_rate", 0.01, 0.05, log=True),
             "max_depth": trial.suggest_int("max_depth", 2, 4),
         }
+
 
         model = GradientBoostingRegressor(random_state=42, **params)
 
