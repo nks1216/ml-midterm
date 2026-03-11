@@ -428,16 +428,16 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 3 | EDUC      | 0.1119 | Educational attainment |
 |                       | 4 | SEX       | 0.0351 | Respondent’s sex |
 |                       | 5 | AGE       | 0.0347 | Respondent's age |
-| **Linear Regression** | 1 | LABFORCE | 29780.72 | Labor force status | 
-|                       | 2 | RETCONT | 22199.51 | Retirement contributions |
-|                       | 3 | CLASSWKR | 12805.38 | Class of worker |
-|                       | 4 | EDUC | 12180.82 | Educational attainment |
-|                       | 5 | SEX | 10913.70 | Respondent's sex |
-| **Elastic Net**       | 1 | RETCONT | 15792 | Retirement contributions |
-|                       | 2 | EDUC    | 9166  | Educational attainment |
-|                       | 3 | OCC2010 | 7074  | Occupation (2010 classification) |
-|                       | 4 | SEX     | 6974  | Respondent's sex |
-|                       | 5 | AGE     | 4753  | Respondent's age |
+| **Linear Regression** | 1 | LABFORCE | 29,781 | Labor force status | 
+|                       | 2 | RETCONT | 22,200 | Retirement contributions |
+|                       | 3 | CLASSWKR | 12,805 | Class of worker |
+|                       | 4 | EDUC | 12,181 | Educational attainment |
+|                       | 5 | SEX | 10,914 | Respondent's sex |
+| **Elastic Net**       | 1 | RETCONT | 15,792 | Retirement contributions |
+|                       | 2 | EDUC    | 9,166  | Educational attainment |
+|                       | 3 | OCC2010 | 7,074  | Occupation (2010 classification) |
+|                       | 4 | SEX     | 6,974  | Respondent's sex |
+|                       | 5 | AGE     | 4,753  | Respondent's age |
 
 ### 4.4. Top 20 Feature Importances (Only for the Best Model: Gradient Boosting)
 ![Gradient Boosting](reports/figures/gb_feature_importance.png)
