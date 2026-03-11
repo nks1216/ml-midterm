@@ -124,7 +124,7 @@ def plot_actual_vs_predicted(
     model, X_test, y_test, out_path="reports/figures/en_actual_vs_predicted.png"
 ):
     """
-    Plot actual vs predicted income values.
+    Plot actual vs predicted income values on a log scale.
     Args:
         model: Trained pipeline
         X_test: Test features
@@ -132,14 +132,29 @@ def plot_actual_vs_predicted(
         out_path: Output file path
     """
     preds = model.predict(X_test)
+    r2 = r2_score(y_test, preds)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.scatter(y_test, preds, alpha=0.3, color="steelblue")
-    ax.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], "r--")
-    ax.set_xlabel("Actual Income")
-    ax.set_ylabel("Predicted Income")
-    ax.set_title("ElasticNet — Actual vs Predicted")
+    # clip to positive values only (log scale requires > 0)
+    mask = (y_test > 0) & (preds > 0)
+    y_plot = y_test[mask] / 1000
+    p_plot = preds[mask] / 1000
+
+    fig, ax = plt.subplots(figsize=(10, 8))
+    ax.scatter(y_plot, p_plot, alpha=0.2, color="steelblue", s=10)
+
+    lims = [1e0, max(y_plot.max(), p_plot.max()) * 1.5]
+    ax.plot(lims, lims, "r--", label="Perfect fit")
+
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlim(lims)
+    ax.set_ylim(lims)
+    ax.set_xlabel("Actual INCTOT ($k, log scale)")
+    ax.set_ylabel("Predicted INCTOT ($k, log scale)")
+    ax.set_title(f"ElasticNet — Actual vs Predicted (R² = {r2:.3f})")
+    ax.legend()
     plt.tight_layout()
+    os.makedirs(os.path.dirname(out_path), exist_ok=True)
     plt.savefig(out_path)
     plt.close()
 
