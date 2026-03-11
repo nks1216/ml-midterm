@@ -439,6 +439,15 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 ### 4.4. Top 20 Feature Importances (Only for the Best Model: Gradient Boosting)
 ![Gradient Boosting](reports/figures/gb_feature_importance.png)
 
+Gradient Boosting places overwhelming weight on three variables—retirement contribution, occupation, and education —which together dominate the model’s predictive structure. 
+
+Retirement contributions (RETCONT, 0.4397) represents the amount an individual contributes to tax‑advantaged retirement accounts such as 401(k) or IRA. Because these contributions typically scale with income, RETCONT acts as a strong proxy for earnings and naturally emerges as the single most influential predictor.
+
+Occupation (OCC2010, 0.1430) and education (EDUC, 0.1119) follow as major determinants, reflecting the strong link between job type, skill level, and income. Demographic factors such as sex (SEX, 0.0351) and age (AGE, 0.0347) also contribute meaningfully, capturing systematic differences in labor‑market outcomes. 
+
+Work‑related variables—including weekly hours (UHRSWORKT 0.0307, UHRSWORK1 0.0182), employer‑paid health insurance (PAIDGH 0.0262), and industry (IND 0.0247)—further refine the model by incorporating job characteristics, benefits, and sector‑specific wage structures. Finally, the number of employers (NUMEMPS 0.0123) provides information about employment stability, with multiple employers often indicating part‑time or unstable work associated with lower income.
+
+
 ## 5. Reproducibility
 
 ### 5.1. Clone the repository  
