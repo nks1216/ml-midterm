@@ -38,8 +38,6 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 #### Feature Variables ($X$)
 
 47 features were selected from the 313-variable extract, grouped into 9 categories.
-
-=======
  
 **1. Demographics** (11 variables)
  
@@ -56,8 +54,6 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 | 9 | `NATIVITY` | Foreign-born or native | 1 = Both parents native, 4 = Both parents foreign, 5 = Foreign born, ... |
 | 10 | `CITIZEN` | Citizenship status | 1 = Born in U.S., 4 = Naturalized, 5 = Not a citizen, ... |
 | 11 | `BPL` | Birthplace | FIPS state codes for U.S.; country codes for foreign-born (173 codes) |
-
-=======
  
 **2. Education** (2 variables)
  
@@ -136,7 +132,6 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 | 47 | `MIGRATE1` | Migration status (1 year) | 1 = Same house, 3 = Within county, 5 = Between states, 6 = Abroad, ... |
 
 > **Note**: IPUMS "Not in Universe" (NIU) sentinel values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
-=======
 
 ---
 
