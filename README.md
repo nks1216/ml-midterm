@@ -657,7 +657,7 @@ Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuL
 python3 src/data_clean.py
 python3 src/models/model_rf.py
 python3 src/models/model_gb.py
-python3 src/models/model_gb_top20.py # Gradient Boosting model using only the top 20 consensus features
+python3 src/models/model_gb_top20.py # Reduced Gradient Boosting using top 20 features
 python3 src/models/model_linear.py
 python3 src/models/model_en.py
 ```
