@@ -406,6 +406,7 @@ At the same time, its simplicity is also its main limitation. Linear Regression 
 | MAE | 34,199.48 |
 
 These results show that Linear Regression captures part of the overall income pattern, but it underperforms relative to the tree-based models. This is consistent with the expectation that income depends on nonlinear relationships and interactions that a purely linear model cannot fully capture.
+
 ---
 
 ### 3.4. Elastic Net (New Model)
