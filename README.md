@@ -38,100 +38,99 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 #### Feature Variables ($X$)
 
 47 features were selected from the 313-variable extract, grouped into 8 categories.
-
-### 1. Demographics
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **AGE** | Age in years | 25 → 25 years old |
-| **SEX** | Gender | 1 = Male, 2 = Female |
-| **RACE** | Race category | 100 = White, 200 = Black, 651 = Asian |
-| **MARST** | Marital status | 1 = Married (spouse present), 4 = Divorced, 6 = Never married |
-| **VETSTAT** | Veteran status | 1 = No service, 2 = Veteran |
-| **RELATE** | Relationship to household head | 101 = Head, 201 = Spouse, 301 = Child |
-| **POPSTAT** | Population status | 1 = Adult civilian, 2 = Armed forces, 3 = Child |
-| **HISPAN** | Hispanic origin | 0 = Not Hispanic, 100 = Mexican, 200 = Puerto Rican |
-| **NATIVITY** | Native/foreign-born | 1 = Native, 4/5 = Foreign-born |
-| **CITIZEN** | Citizenship | 1 = Born in U.S., 4 = Naturalized, 5 = Not a citizen |
-| **BPL** | Birthplace | 09900 = U.S., 50220 = Korea |
-
-### 2. Education
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **EDUC** | Educational attainment | 073 = High school diploma, 111 = BA, 123 = MA |
-| **SCHLCOLL** | School/college attendance | 1 = HS full-time, 3 = College full-time, 5 = Not in school |
-
-### 3. Family
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **FAMSIZE** | Family size | 1, 2, 3… |
-| **FAMKIND** | Family type | 1 = Husband-wife, 2 = Male head, 3 = Female head |
-
-### 4. Geography
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **REGION** | Census region | 11 = Northeast, 21 = Midwest, 31 = South, 41 = West |
-| **STATEFIP** | State FIPS | 06 = CA, 36 = NY, 48 = TX |
-| **METRO** | Metropolitan status | 1 = Non-metro, 2 = Central city, 3 = Outside central city |
-| **CBSASZ** | Metro area size | 0 = NIU, 6 = 5M+ |
-
-### 5. Employment
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **EMPSTAT** | Employment status | 10 = At work, 21 = Unemployed, 32 = Retired |
-| **LABFORCE** | Labor force status | 1 = No, 2 = Yes |
-| **CLASSWKR** | Class of worker | 10 = Self-employed, 21 = Private, 25 = Federal |
-| **OCC2010** | Occupation code | 0010 = CEO |
-| **IND** | Industry code | 0170 = Agriculture |
-| **UHRSWORKT** | Usual weekly hours (all jobs) | Actual hours |
-| **UHRSWORK1** | Usual weekly hours (main job) | Actual hours |
-| **WKSTAT** | Work status | 11 = Full-time, 21 = PT involuntary, 22 = PT voluntary |
-| **NUMEMPS** | Number of employers | 1, 2, 3… |
-| **FIRMSIZE** | Firm size | 1 = <25, 5 = 100–499, 9 = 1000+ |
-| **PENSION** | Pension coverage | 1 = No, 2 = Yes |
-| **PAIDHOUR** | Paid hourly | 1 = No, 2 = Yes |
-| **UNION** | Union membership | 1 = No union, 2 = Member, 3 = Covered |
-| **SRCEARN** | Source of earnings | 1 = Wage/salary, 2 = Self-employed |
-| **RETCONT** | Retirement contributions | 1 = No, 2 = Yes |
-| **PAIDGH** | Employer-paid group health | 1 = No, 21 = All, 22 = Part |
-
-### 6. Housing
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **OWNERSHP** | Home ownership | 10 = Owned, 20 = Rented |
-| **UNITSSTR** | Units in structure | 01 = Mobile home, 03 = Single family, 10 = 5–9 units |
-| **PUBHOUS** | Public housing | 1 = No, 2 = Yes |
-| **RENTSUB** | Rent subsidy | 1 = No, 2 = Yes |
-
-### 7. Government Benefits
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **FOODSTMP** | SNAP recipiency | 1 = No, 2 = Yes |
-| **HEATSUB** | Energy subsidy | 1 = No, 2 = Yes |
-
-### 8. Health Insurance
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **ANYCOVLY** | Any coverage last year | 1 = No, 2 = Yes |
-| **PHINSUR** | Private insurance | 1 = No, 2 = Yes |
-| **GRPCOVLY** | Group insurance | 1 = No, 2 = Yes |
-| **HIMCAIDLY** | Medicaid | 1 = No, 2 = Yes |
-| **HIMCARELY** | Medicare | 1 = No, 2 = Yes |
-| **PAIDGH** | Employer-paid group health | 1 = No, 21 = All, 22 = Part |
-
-### 9. Migration
-
-| Variable | Description | Example Codes |
-|---------|-------------|----------------|
-| **MIGRATE1** | Migration status (1 year) | 1 = Same house, 3 = Different county, 5 = Different state |
-
+ 
+**1. Demographics** (11 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 1 | `AGE` | Age | 0–90+ (continuous) |
+| 2 | `SEX` | Sex | 1 = Male, 2 = Female |
+| 3 | `RACE` | Race | 100 = White, 200 = Black, 651 = Asian, ... (29 codes) |
+| 4 | `MARST` | Marital status | 1 = Married (spouse present), 3 = Separated, 4 = Divorced, 6 = Never married, ... |
+| 5 | `VETSTAT` | Veteran status | 0 = NIU, 1 = No service, 2 = Yes |
+| 6 | `RELATE` | Relationship to household head | 0101 = Head, 0201 = Spouse, 0301 = Child, ... (20 codes) |
+| 7 | `POPSTAT` | Adult civilian, armed forces, or child | 1 = Adult civilian, 2 = Armed Forces, 3 = Child |
+| 8 | `HISPAN` | Hispanic origin | 000 = Not Hispanic, 100 = Mexican, 200 = Puerto Rican, ... (17 codes) |
+| 9 | `NATIVITY` | Foreign-born or native | 1 = Both parents native, 4 = Both parents foreign, 5 = Foreign born, ... |
+| 10 | `CITIZEN` | Citizenship status | 1 = Born in U.S., 4 = Naturalized, 5 = Not a citizen, ... |
+| 11 | `BPL` | Birthplace | FIPS state codes for U.S.; country codes for foreign-born (173 codes) |
+ 
+**2. Education** (2 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 12 | `EDUC` | Educational attainment recode | 073 = HS diploma, 111 = Bachelor's, 123 = Master's, 125 = Doctorate, ... (36 codes) |
+| 13 | `SCHLCOLL` | School or college attendance | 0 = NIU, 3 = College full-time, 5 = Does not attend, ... |
+ 
+**3. Family** (2 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 14 | `FAMSIZE` | Number of family members | 1, 2, 3, ... 29+ (continuous) |
+| 15 | `FAMKIND` | Kind of family unit | 1 = Husband/wife, 2 = Male ref. person, 3 = Female ref. person |
+ 
+**4. Geography** (4 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 16 | `REGION` | Census region | 11 = New England, 12 = Mid Atlantic, 31 = South Atlantic, 42 = Pacific, ... (10 codes) |
+| 17 | `STATEFIP` | State (FIPS code) | 01 = Alabama, 06 = California, 36 = New York, 48 = Texas, ... (75 codes) |
+| 18 | `METRO` | Metropolitan status | 1 = Not in metro, 2 = In central city, 3 = Not in central city, ... |
+| 19 | `CBSASZ` | Metro area size | 00 = Non-metro, 01 = 100k–250k, 04 = 1M–2.5M, 06 = 5M+, ... |
+ 
+**5. Employment** (15 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 20 | `EMPSTAT` | Employment status | 10 = At work, 20 = Unemployed, 30 = Not in labor force, ... (14 codes) |
+| 21 | `LABFORCE` | Labor force status | 0 = NIU, 1 = Not in LF, 2 = In labor force |
+| 22 | `CLASSWKR` | Class of worker | 22 = Private for-profit, 25 = Federal govt, 27 = State govt, ... (15 codes) |
+| 23 | `OCC2010` | Occupation (2010 basis) | 0010 = Chief executives, 2100 = Lawyers, 4720 = Cashiers, ... (479 codes) |
+| 24 | `IND` | Industry | Continuous industry codes |
+| 25 | `UHRSWORKT` | Hours usually worked per week (all jobs) | 1–99 (continuous); 997 = Varies |
+| 26 | `UHRSWORK1` | Hours usually worked per week (main job) | 0–99 (continuous); 997 = Varies |
+| 27 | `WKSTAT` | Full/part-time status | 10 = Full-time, 20 = Part-time (economic), 40 = Part-time (non-economic), ... (15 codes) |
+| 28 | `NUMEMPS` | Number of employers last year | Continuous |
+| 29 | `FIRMSIZE` | Number of employees at firm | 1 = Under 10, 2 = 10–24, 7 = 100–499, 8 = 500–999, ... (10 codes) |
+| 30 | `PENSION` | Pension plan at work | 0 = NIU, 1 = No plan, 2 = Plan but not included, 3 = Included |
+| 31 | `PAIDHOUR` | Paid by the hour | 0 = NIU, 1 = No, 2 = Yes |
+| 32 | `UNION` | Union membership | 0 = NIU, 1 = No coverage, 2 = Union member, 3 = Covered but not member |
+| 33 | `SRCEARN` | Source of earnings from longest job | 0 = NIU, 1 = Wage/salary, 2 = Self-employed, 3 = Farm self-employed |
+| 34 | `RETCONT` | Retirement contributions | Continuous (dollar amount) |
+ 
+**6. Housing** (4 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 35 | `OWNERSHP` | Ownership of dwelling | 10 = Owned, 21 = No cash rent, 22 = With cash rent |
+| 36 | `UNITSSTR` | Units in structure | 01 = Mobile home, 11 = One unit, 12 = 10+ units, ... (7 codes) |
+| 37 | `PUBHOUS` | Living in public housing | 0 = NIU, 1 = No, 2 = Yes |
+| 38 | `RENTSUB` | Government rent subsidy | 0 = NIU, 1 = No, 2 = Yes |
+ 
+**7. Government Benefits** (2 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 39 | `FOODSTMP` | Food stamp recipiency | 0 = NIU, 1 = No, 2 = Yes |
+| 40 | `HEATSUB` | Received energy subsidy | 0 = NIU, 1 = No, 2 = Yes |
+ 
+**8. Health Insurance** (6 variables)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 41 | `ANYCOVLY` | Any health insurance coverage last year | 01 = No, 02 = Yes |
+| 42 | `PHINSUR` | Private health insurance last year | 0 = NIU, 1 = No, 2 = Yes |
+| 43 | `GRPCOVLY` | Employment-based group health last year | 0 = NIU, 1 = No, 2 = Yes |
+| 44 | `HIMCAIDLY` | Covered by Medicaid last year | 1 = No, 2 = Yes |
+| 45 | `HIMCARELY` | Covered by Medicare last year | 0 = NIU, 1 = No, 2 = Yes |
+| 46 | `PAIDGH` | Employer paid for group health plan | 00 = NIU, 10 = No, 21 = Paid part, 22 = Paid all |
+ 
+**9. Migration** (1 variable)
+ 
+| # | Variable | Description | Example Values |
+|---|----------|-------------|----------------|
+| 47 | `MIGRATE1` | Migration status (1 year) | 1 = Same house, 3 = Within county, 5 = Between states, 6 = Abroad, ... |
+ 
 > **Note**: IPUMS "Not in Universe" (NIU) values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
 
 ---
@@ -555,7 +554,7 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 | Model | Actual vs. Predicted |
 |-------|----------------------|
-| **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) |
+| **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) <br><sub>This plot compares actual and predicted income on a log scale for the Random Forest model (R² = 0.333). The model predicts mid-range incomes ($10k–$200k) reasonably well, with most observations clustering near the 45-degree line. However, horizontal banding in the predicted values — a hallmark of Random Forest's leaf-node averaging — is visible, and high-income individuals (above $500k) are systematically underpredicted due to the model's inability to extrapolate beyond observed training values.</sub> |
 | **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the Gradient Boosting model (R² = 0.365). The model captures nonlinear income patterns well, with many observations falling close to the 45‑degree line. The wider spread among low‑income observations reflects the high variability and noise in the lower tail of the income distribution, which becomes more visually pronounced on a log scale. Despite this dispersion, Gradient Boosting delivers noticeably better overall predictive accuracy than linear models, especially across the middle and upper parts of the income distribution.</sub> |
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
 | **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the ElasticNet model (R² = 0.276). Points are concentrated along the perfect fit line for mid-range earners ($10k–$100k), where the model performs reasonably well. However, ElasticNet systematically overpredicts low incomes and underpredicts high incomes — visible in the wide spread at both extremes. This is expected behavior for a linear model: because ElasticNet assumes income is a weighted sum of features, it cannot capture the nonlinear interactions that drive very high or very low incomes. This limitation explains the lower R² compared to tree-based models.</sub> |
