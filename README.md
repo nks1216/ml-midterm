@@ -604,6 +604,8 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 |                       | 4 | `SEX`       | 6,974  | Respondent's sex |
 |                       | 5 | `AGE`       | 4,753  | Respondent's age |
 
+Linear Regression highlights `LABFORCE` because it captures a strong, direct signal about whether someone has income at all. In contrast, tree‑based models and Elastic Net already explain income differences using more detailed predictors like occupation, education, and hours worked, so `LABFORCE` becomes less useful. This structural difference naturally leads to lower importance in Random Forest, Gradient Boosting, and Elastic Net.
+
 ---
 
 ### 4.4. Top 20 Feature Importances (Only for the Best Model: Gradient Boosting)
