@@ -676,6 +676,16 @@ For convenience, individual model scripts are provided.
 
 - **All models are predictive rather than causal**, meaning the results cannot be interpreted as estimating the causal effect of any feature on income.
 
+**Future Improvements**
+
+- Explore interaction terms or nonlinear transformations for linear models.
+
+- Incorporate additional socioeconomic variables (e.g., experience, job tenure).
+
+- Experiment with alternative models such as XGBoost or LightGBM.
+
+- Assess model fairness by examining prediction error disparities across demographic subgroups.
+
 ---
 
 ## 7. Collaboration and Workflow
