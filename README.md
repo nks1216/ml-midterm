@@ -369,6 +369,7 @@ These results also show that the optimal hyperparameters shift when the feature 
 ---
 
 ### 3.3. Linear Regression
+Linear Regression is transparent, easy to interpret, and computationally efficient. However, it assumes additive linear relationships and cannot naturally capture nonlinearities or complex interactions among predictors. For income data, this can lead to underfitting relative to more flexible tree-based models.
 
 **Model Concept**
 
@@ -391,8 +392,20 @@ Because the predictors are measured on different scales, we standardized the inp
 
 **Why this model matters**
 
-Linear Regression is transparent, easy to interpret, and computationally efficient. However, it assumes additive linear relationships and cannot naturally capture nonlinearities or complex interactions among predictors. For income data, this can lead to underfitting relative to more flexible tree-based models.
+Linear Regression serves as a useful baseline because it is transparent, easy to estimate, and straightforward to interpret. After standardizing the predictors, the coefficient magnitudes can be compared within the model, which helps identify which variables have the strongest linear association with income. This makes Linear Regression especially valuable as a benchmark against more flexible machine learning models.
 
+At the same time, its simplicity is also its main limitation. Linear Regression assumes that predictors affect income through additive, linear relationships and does not naturally capture nonlinear patterns or complex interactions among variables. Because income is shaped by many overlapping socioeconomic factors, this can cause the model to underfit the data relative to tree-based methods such as Random Forest and Gradient Boosting.
+
+**Model Results**
+
+| Metric | Value |
+|--------|-------|
+| R² | 0.2914 |
+| MSE | 5,276,020,877 |
+| RMSE | 72,636.22 |
+| MAE | 34,199.48 |
+
+These results show that Linear Regression captures part of the overall income pattern, but it underperforms relative to the tree-based models. This is consistent with the expectation that income depends on nonlinear relationships and interactions that a purely linear model cannot fully capture.
 ---
 
 ### 3.4. Elastic Net (New Model)
