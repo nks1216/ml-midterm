@@ -2,32 +2,32 @@ Random Forest Results
 =========================
 
 Best Parameters:
-  n_estimators: 200
-  max_depth: 15
+  max_depth: 10
+  n_estimators: 300
 
-R² score: 0.3313
-MSE: 4,979,200,195.28
-MAE: 31,322.19
+R² score: 0.3328
+MSE: 4,968,256,711.94
+MAE: 31,028.54
 
 Top 20 Feature Importances:
 ---------------------------
-   1. RETCONT              0.255252
-   2. OCC2010              0.116770
-   3. AGE                  0.069549
-   4. EDUC                 0.056786
-   5. IND                  0.049341
-   6. STATEFIP             0.042483
-   7. PAIDGH               0.029551
-   8. REGION               0.026060
-   9. FAMSIZE              0.025396
-  10. UHRSWORK1            0.024204
-  11. UHRSWORKT            0.023860
-  12. FIRMSIZE             0.021476
-  13. CBSASZ               0.019744
-  14. SEX                  0.018558
-  15. MARST                0.015842
-  16. UNITSSTR             0.015813
-  17. METRO                0.015200
-  18. CLASSWKR             0.014735
-  19. RELATE               0.014685
-  20. BPL                  0.013570
+   1. RETCONT              0.356421
+   2. OCC2010              0.139173
+   3. EDUC                 0.068627
+   4. AGE                  0.053997
+   5. IND                  0.037566
+   6. PAIDGH               0.032940
+   7. STATEFIP             0.026818
+   8. SEX                  0.024347
+   9. UHRSWORK1            0.022551
+  10. UHRSWORKT            0.020982
+  11. FAMSIZE              0.017408
+  12. FIRMSIZE             0.015668
+  13. REGION               0.014820
+  14. NUMEMPS              0.013502
+  15. MARST                0.012723
+  16. CLASSWKR             0.010931
+  17. CBSASZ               0.010705
+  18. BPL                  0.010561
+  19. RELATE               0.010184
+  20. WKSTAT               0.009018

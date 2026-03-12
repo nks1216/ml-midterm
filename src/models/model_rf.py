@@ -19,6 +19,7 @@ import pandas as pd
 import seaborn as sns
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.model_selection import GridSearchCV
 
 warnings.filterwarnings("ignore")
 
@@ -42,29 +43,45 @@ def load_splits(processed_dir):
     return X_train, X_test, y_train, y_test
 
 
+PARAM_GRID = {
+    "n_estimators": [100, 200, 300],
+    "max_depth": [10, 15, 20],
+}
+
+
 def fit_random_forest(X_train, y_train, feature_names):
-    """Fit a Random Forest and return sorted feature importances.
+    """Tune hyperparameters via GridSearchCV and return the best model.
+
+    Searches over n_estimators and max_depth using 5-fold cross-validation,
+    then refits the best model on the full training set.
 
     Args:
         X_train: Training features.
         y_train: Training target.
         feature_names: List of feature column names.
     Returns:
-        Tuple of (fitted model, Series of importances sorted descending).
+        Tuple of (best fitted model, best params dict, Series of importances).
     """
-    model = RandomForestRegressor(
-        n_estimators=200,
-        max_depth=15,
+    base_model = RandomForestRegressor(n_jobs=-1, random_state=42)
+    grid = GridSearchCV(
+        base_model,
+        param_grid=PARAM_GRID,
+        cv=5,
+        scoring="r2",
+        verbose=1,
         n_jobs=-1,
-        random_state=42,
     )
-    model.fit(X_train, y_train)
+    grid.fit(X_train, y_train)
 
+    print(f"\n  Best Parameters: {grid.best_params_}")
+    print(f"  Best CV R²: {grid.best_score_:.4f}")
+
+    model = grid.best_estimator_
     importances = (
         pd.Series(model.feature_importances_, index=feature_names)
         .sort_values(ascending=False)
     )
-    return model, importances
+    return model, grid.best_params_, importances
 
 
 def print_top_features(importances, n=20):
@@ -149,11 +166,12 @@ def plot_actual_vs_predicted(y_test, y_pred, r2_score, mse=None, mae=None, save_
 RESULTS_DIR = PROJECT_ROOT / "reports" / "results"
 
 
-def save_results_txt(importances, r2_score, mse, mae, n=20, save_dir=RESULTS_DIR):
+def save_results_txt(importances, best_params, r2_score, mse, mae, n=20, save_dir=RESULTS_DIR):
     """Save model results to a text file in standardized format.
 
     Args:
         importances: Series of feature importances sorted descending.
+        best_params: Dict of best hyperparameters from GridSearchCV.
         r2_score: Test R² score.
         mse: Mean Squared Error.
         mae: Mean Absolute Error.
@@ -168,8 +186,10 @@ def save_results_txt(importances, r2_score, mse, mae, n=20, save_dir=RESULTS_DIR
         "=========================",
         "",
         "Best Parameters:",
-        "  n_estimators: 200",
-        "  max_depth: 15",
+    ]
+    for param, value in best_params.items():
+        lines.append(f"  {param}: {value}")
+    lines += [
         "",
         f"R² score: {r2_score:.4f}",
         f"MSE: {mse:,.2f}",
@@ -194,8 +214,8 @@ def main():
 
     feature_names = list(X_train.columns)
 
-    print("\nTraining Random Forest...")
-    model, importances = fit_random_forest(X_train, y_train, feature_names)
+    print("\nRunning GridSearchCV (3×3 = 9 combinations, 5-fold CV)...")
+    model, best_params, importances = fit_random_forest(X_train, y_train, feature_names)
 
     y_pred = model.predict(X_test)
     score = model.score(X_test, y_test)
@@ -203,7 +223,7 @@ def main():
     mae = mean_absolute_error(y_test, y_pred)
 
     print(f"\n{'=' * 60}")
-    print(f"  Model Evaluation")
+    print(f"  Model Evaluation (Test Set)")
     print(f"{'=' * 60}")
     print(f"  R²  : {score:.4f}")
     print(f"  MSE : {mse:>15,.0f}  (${mse ** 0.5:,.0f} RMSE)")
@@ -216,7 +236,7 @@ def main():
     plot_actual_vs_predicted(y_test, np.array(y_pred), score, mse=mse, mae=mae)
 
     print("\nSaving results text file...")
-    save_results_txt(importances, score, mse, mae)
+    save_results_txt(importances, best_params, score, mse, mae)
 
 
 if __name__ == "__main__":
