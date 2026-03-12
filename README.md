@@ -421,7 +421,7 @@ Our dataset has 47 features, many of which are correlated with each other. For e
 - `UHRSWORKT` and `UHRSWORK1` both measure hours worked
 - `ANYCOVLY`, `PHINSUR`, `GRPCOVLY` all relate to health insurance
 
-Pure Lasso (L1 only) tends to arbitrarily pick one variable from a correlated group and drop the rest, which can be unstable. Pure Ridge keeps everything but cannot perform feature selection. Elastic Net handles both — it keeps correlated features together while still being able to eliminate truly irrelevant ones.
+Pure Lasso (L1 only) tends to arbitrarily pick one variable from a correlated group and drop the rest, which can be unstable. Pure Ridge keeps everything but cannot perform feature selection. Elastic Net handles both, it keeps correlated features together while still being able to eliminate truly irrelevant ones.
 
 **Preprocessing: StandardScaler**
 
@@ -432,7 +432,7 @@ Pipeline([("scaler", StandardScaler()), ("model", ElasticNet(max_iter=10000))])
 
 This transforms every feature to have mean = 0 and standard deviation = 1. This step is essential for two reasons:
 1. Without scaling, features measured in large units (e.g. INCTOT in dollars) would dominate features measured in small units (e.g. SEX coded as 1/2), making coefficient comparison meaningless.
-2. The penalty terms treat all coefficients equally — so all features must be on the same scale before penalization.
+2. The penalty terms treat all coefficients equally, so all features must be on the same scale before penalization.
 
 After standardization, the absolute value of each coefficient directly reflects its importance to the model.
 
@@ -446,13 +446,13 @@ Our model uses default hyperparameters (alpha=1, l1_ratio=0.5):
 | MSE | 5,390,603,768 |
 | MAE | 33,895 |
 
-With these settings, **ElasticNet retained all 47 features** — no features were zeroed out. This indicates that under moderate regularization, every socioeconomic variable in our dataset carries at least some marginal predictive signal for income.
+With these settings, **ElasticNet retained all 47 features** no features were zeroed out. This indicates that under moderate regularization, every socioeconomic variable in our dataset carries at least some marginal predictive signal for income.
 
 **Regularization Sensitivity Analysis**
 
 With default settings (alpha=1, l1_ratio=0.5), ElasticNet retained all 
 47 features. To understand how the penalty affects feature selection, we 
-first increased alpha while keeping l1_ratio fixed at 0.5 — but no features 
+first increased alpha while keeping l1_ratio fixed at 0.5, but no features 
 were dropped even at alpha=500. This revealed that the L2 (Ridge) component 
 was protecting all features from elimination. We then increased l1_ratio 
 toward 1.0 to shift the balance toward L1 (Lasso), which is the penalty 
@@ -467,7 +467,7 @@ l1_ratio finally began eliminating features:
 | 1000 | 0.9 | 2 |
 | 10000 | 0.99 | 28 |
 
-**At alpha=1000, l1_ratio=0.9**, the first features to be eliminated were `FAMSIZE` (family size) and `STATEFIP` (state FIPS code) — suggesting these contribute the least marginal income-predictive signal once other variables are controlled for.
+**At alpha=1000, l1_ratio=0.9**, the first features to be eliminated were `FAMSIZE` (family size) and `STATEFIP` (state FIPS code), suggesting these contribute the least marginal income-predictive signal once other variables are controlled for.
 
 **At extreme regularization (alpha=10000, l1_ratio=0.99)**, only 19 features survived:
 
@@ -528,7 +528,7 @@ l1_ratio finally began eliminating features:
 | HIMCARELY | Covered by Medicare | Health Insurance |
 | MIGRATE1 | Migration status (moved in past year) | Migration |
 
-This sensitivity analysis confirms that our 47-feature default model is not over-specified: the default penalty retains all features because each contributes marginal signal, while aggressive regularization converges on a compact, interpretable core of income determinants. The 19 surviving features at extreme penalty form a coherent economic story — **employment structure** (OCC2010, IND, CLASSWKR), **compensation and benefits** (RETCONT, PENSION, PAIDGH), **demographic labor market factors** (SEX, EDUC, MARST), and **economic vulnerability indicators** (FOODSTMP, PUBHOUS, HIMCAIDLY).
+This sensitivity analysis confirms that our 47-feature default model is not over-specified: the default penalty retains all features because each contributes marginal signal, while aggressive regularization converges on a compact, interpretable core of income determinants. The 19 surviving features at extreme penalty form a coherent economic story, **employment structure** (OCC2010, IND, CLASSWKR), **compensation and benefits** (RETCONT, PENSION, PAIDGH), **demographic labor market factors** (SEX, EDUC, MARST), and **economic vulnerability indicators** (FOODSTMP, PUBHOUS, HIMCAIDLY).
 
 **Feature Importance**
 
@@ -562,7 +562,7 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 | **Random Forest** | ![Random Forest](reports/figures/rf_actual_vs_predicted.png) <br><sub>This plot compares actual and predicted income on a log scale for the Random Forest model (R² = 0.333). The model predicts mid-range incomes ($10k–$200k) reasonably well, with most observations clustering near the 45-degree line. However, horizontal banding in the predicted values — a hallmark of Random Forest's leaf-node averaging — is visible, and high-income individuals (above $500k) are systematically underpredicted due to the model's inability to extrapolate beyond observed training values.</sub> |
 | **Gradient Boosting** | ![Gradient Boosting](reports/figures/gb_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the Gradient Boosting model (R² = 0.365). The model captures nonlinear income patterns well, with many observations falling close to the 45‑degree line. The wider spread among low‑income observations reflects the high variability and noise in the lower tail of the income distribution, which becomes more visually pronounced on a log scale. Despite this dispersion, Gradient Boosting delivers noticeably better overall predictive accuracy than linear models, especially across the middle and upper parts of the income distribution.</sub> |
 | **Linear Regression** | ![Linear Regression](reports/figures/lr_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale. Points closer to the 45-degree line indicate more accurate predictions. The spread around the line, especially at higher income levels, suggests that the model captures the overall income trend but struggles to fully fit extreme values and nonlinear relationships.</sub> |
-| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the ElasticNet model (R² = 0.276). Points are concentrated along the perfect fit line for mid-range earners ($10k–$100k), where the model performs reasonably well. However, ElasticNet systematically overpredicts low incomes and underpredicts high incomes — visible in the wide spread at both extremes. This is expected behavior for a linear model: because ElasticNet assumes income is a weighted sum of features, it cannot capture the nonlinear interactions that drive very high or very low incomes. This limitation explains the lower R² compared to tree-based models.</sub> |
+| **Elastic Net** | ![Elastic Net](reports/figures/en_actual_vs_predicted.png)<br><sub>This plot compares actual and predicted income on a log scale for the ElasticNet model (R² = 0.276). Points are concentrated along the perfect fit line for mid-range earners ($10k–$100k), where the model performs reasonably well. However, ElasticNet systematically overpredicts low incomes and underpredicts high incomes (visible in the wide spread at both extremes). This is expected behavior for a linear model: because ElasticNet assumes income is a weighted sum of features, it cannot capture the nonlinear interactions that drive very high or very low incomes. This limitation explains the lower R² compared to tree-based models.</sub> |
 
 ---
 
@@ -606,17 +606,17 @@ Work‑related variables—including weekly hours (`UHRSWORKT`, 0.0307, `UHRSWOR
 
 ### 4.5. Key Takeaways and Recommendations
 
-Across all four models, three findings are consistent and robust:
+Across all four models, these findings are consistent:
 
-1. **Retirement contributions (RETCONT) is the single strongest predictor of income** — appearing as the #1 feature in every model. This makes economic sense: retirement contributions scale directly with earnings, making them a strong proxy for high income.
+1. **Retirement contributions (RETCONT) is the single strongest predictor of income** : appearing as the #1 feature in every model. This makes economic sense: retirement contributions scale directly with earnings, making them a strong proxy for high income.
 
-2. **Occupation (OCC2010) and education (EDUC) are the next most important predictors** — appearing in the top 3 across all models. This confirms the well-established economic relationship between job type, skill level, and earnings.
+2. **Occupation (OCC2010) and education (EDUC) are the next most important predictors** : appearing in the top 3 across all models. This confirms the well-established economic relationship between job type, skill level, and earnings.
 
-3. **Gender (SEX) consistently appears in the top 5** — reflecting the persistent wage gap in the U.S. labor market.
+3. **Gender (SEX) consistently appears in the top 5** : reflecting the wage gap in the U.S. labor market.
 
-Linear Regression and Elastic Net explain approximately 28–29% of income variation (R² ≈ 0.28–0.29), while Random Forest and Gradient Boosting explain 33–37%. This gap exists because income is not a linear relationship — the return to education varies dramatically by occupation and age. Tree-based models capture these complex interactions naturally, while linear models cannot. Although ElasticNet does not outperform tree models on predictive accuracy, it provides something tree models cannot: **a direct, interpretable measure of how each factor affects income**, making it valuable for policy design.
+Linear Regression and Elastic Net explain approximately 28–29% of income variation (R² ≈ 0.28–0.29), while Random Forest and Gradient Boosting explain 33–37%. This gap exists because income is not a linear relationship. Tree-based models capture complex interactions naturally, while linear models cannot. Although ElasticNet does not outperform tree models on predictive accuracy, it provides something tree models cannot: **a direct, interpretable measure of how each factor affects income**, making it valuable for policy design.
 
-Our recommendation depends on the use case. For a bank predicting loan default risk, Gradient Boosting is best. For a policymaker designing income support programs, ElasticNet is more valuable because it quantifies exactly how each factor affects income.
+Our recommendation depends on the use case:
 
 - **For prediction**: Use Gradient Boosting. It achieves the lowest error (MAE = $29,747) and highest R² (0.365).
 - **For interpretation**: Use Elastic Net or Linear Regression. Their coefficients directly quantify the income effect of each socioeconomic factor.
