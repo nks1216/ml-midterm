@@ -566,26 +566,26 @@ In contrast, Random Forest and Gradient Boosting—both nonlinear tree‑based m
 
 | Model | Rank | Feature | Importance | Description |
 |-------|------|----------|-------------|-------------|
-| **Random Forest**     | 1 | RETCONT   | 0.3564 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1392 | Occupation (2010 classification) |
-|                       | 3 | EDUC      | 0.0686 | Educational attainment |
-|                       | 4 | AGE       | 0.0539 | Respondent's age |
-|                       | 5 | IND       | 0.0375 | Industry |
-| **Gradient Boosting** | 1 | RETCONT   | 0.4397 | Retirement-related income |
-|                       | 2 | OCC2010   | 0.1430 | Occupation (2010 classification) |
-|                       | 3 | EDUC      | 0.1119 | Educational attainment |
-|                       | 4 | SEX       | 0.0351 | Respondent’s sex |
-|                       | 5 | AGE       | 0.0347 | Respondent's age |
-| **Linear Regression** | 1 | LABFORCE | 29,781 | Labor force status | 
-|                       | 2 | RETCONT | 22,200 | Retirement contributions |
-|                       | 3 | CLASSWKR | 12,805 | Class of worker |
-|                       | 4 | EDUC | 12,181 | Educational attainment |
-|                       | 5 | SEX | 10,914 | Respondent's sex |
-| **Elastic Net**       | 1 | RETCONT | 15,792 | Retirement contributions |
-|                       | 2 | EDUC    | 9,166  | Educational attainment |
-|                       | 3 | OCC2010 | 7,074  | Occupation (2010 classification) |
-|                       | 4 | SEX     | 6,974  | Respondent's sex |
-|                       | 5 | AGE     | 4,753  | Respondent's age |
+| **Random Forest**     | 1 | `RETCONT`   | 0.3564 | Retirement-related income |
+|                       | 2 | `OCC2010`   | 0.1392 | Occupation (2010 classification) |
+|                       | 3 | `EDUC`      | 0.0686 | Educational attainment |
+|                       | 4 | `AGE`       | 0.0539 | Respondent's age |
+|                       | 5 | `IND`       | 0.0375 | Industry |
+| **Gradient Boosting** | 1 | `RETCONT`   | 0.4397 | Retirement-related income |
+|                       | 2 | `OCC2010`   | 0.1430 | Occupation (2010 classification) |
+|                       | 3 | `EDUC`      | 0.1119 | Educational attainment |
+|                       | 4 | `SEX`       | 0.0351 | Respondent’s sex |
+|                       | 5 | `AGE`       | 0.0347 | Respondent's age |
+| **Linear Regression** | 1 | `LABFORCE`  | 29,781 | Labor force status | 
+|                       | 2 | `RETCONT`   | 22,200 | Retirement contributions |
+|                       | 3 | `CLASSWKR`  | 12,805 | Class of worker |
+|                       | 4 | `EDUC`      | 12,181 | Educational attainment |
+|                       | 5 | `SEX`       | 10,914 | Respondent's sex |
+| **Elastic Net**       | 1 | `RETCONT`   | 15,792 | Retirement contributions |
+|                       | 2 | `EDUC`      | 9,166  | Educational attainment |
+|                       | 3 | `OCC2010`   | 7,074  | Occupation (2010 classification) |
+|                       | 4 | `SEX`       | 6,974  | Respondent's sex |
+|                       | 5 | `AGE`       | 4,753  | Respondent's age |
 
 ---
 
@@ -644,12 +644,11 @@ Via Google Drive (https://drive.google.com/drive/folders/1ly0tgwf_HWVYg3F5HhfzuL
 python3 src/data_clean.py
 python3 src/models/model_rf.py
 python3 src/models/model_gb.py
-python3 src/models/model_gb_top20.py
+python3 src/models/model_gb_top20.py # Gradient Boosting model using only the top 20 consensus features
 python3 src/models/model_linear.py
 python3 src/models/model_en.py
 ```
 For convenience, individual model scripts are provided.
-
 ---
 
 ## 6. Limitations and Future Improvements
