@@ -668,6 +668,7 @@ python3 src/models/model_linear.py
 python3 src/models/model_en.py
 ```
 For convenience, individual model scripts are provided.
+
 ---
 
 ## 6. Limitations and Future Improvements
@@ -684,13 +685,13 @@ For convenience, individual model scripts are provided.
 
 **Future Improvements**
 
-- Explore interaction terms or nonlinear transformations for linear models.
+- Explore **interaction terms or nonlinear transformations** for linear models.
 
-- Incorporate additional socioeconomic variables (e.g., experience, job tenure).
+- Incorporate **additional socioeconomic variables** (e.g., experience, job tenure).
 
-- Experiment with alternative models such as XGBoost or LightGBM.
+- Experiment with alternative models such as **XGBoost or LightGBM**.
 
-- Assess model fairness by examining prediction error disparities across demographic subgroups.
+- Assess model fairness by examining **prediction error disparities across demographic subgroups**.
 
 ---
 
