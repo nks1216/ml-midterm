@@ -32,7 +32,6 @@ def load_data():
     y_train = pd.read_csv(PROCESSED_DIR / "y_train.csv").squeeze("columns")
     y_test = pd.read_csv(PROCESSED_DIR / "y_test.csv").squeeze("columns")
 
-    print("NEW LINEAR FILE IS RUNNING")
     print(f"Train: {len(X_train):,} rows / Test: {len(X_test):,} rows")
     print(f"Features: {X_train.shape[1]}")
 
