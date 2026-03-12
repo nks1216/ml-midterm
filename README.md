@@ -37,7 +37,9 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 
 #### Feature Variables ($X$)
 
-47 features were selected from the 313-variable extract, grouped into 8 categories.
+47 features were selected from the 313-variable extract, grouped into 9 categories.
+
+=======
  
 **1. Demographics** (11 variables)
  
@@ -54,6 +56,8 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 | 9 | `NATIVITY` | Foreign-born or native | 1 = Both parents native, 4 = Both parents foreign, 5 = Foreign born, ... |
 | 10 | `CITIZEN` | Citizenship status | 1 = Born in U.S., 4 = Naturalized, 5 = Not a citizen, ... |
 | 11 | `BPL` | Birthplace | FIPS state codes for U.S.; country codes for foreign-born (173 codes) |
+
+=======
  
 **2. Education** (2 variables)
  
@@ -99,7 +103,7 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 | 34 | `RETCONT` | Retirement contributions | Continuous (dollar amount) |
  
 **6. Housing** (4 variables)
- 
+
 | # | Variable | Description | Example Values |
 |---|----------|-------------|----------------|
 | 35 | `OWNERSHP` | Ownership of dwelling | 10 = Owned, 21 = No cash rent, 22 = With cash rent |
@@ -124,14 +128,15 @@ IPUMS CPS (https://cps.ipums.org/cps/) provides U.S. Census Bureau's Current Pop
 | 44 | `HIMCAIDLY` | Covered by Medicaid last year | 1 = No, 2 = Yes |
 | 45 | `HIMCARELY` | Covered by Medicare last year | 0 = NIU, 1 = No, 2 = Yes |
 | 46 | `PAIDGH` | Employer paid for group health plan | 00 = NIU, 10 = No, 21 = Paid part, 22 = Paid all |
- 
+
 **9. Migration** (1 variable)
- 
+
 | # | Variable | Description | Example Values |
 |---|----------|-------------|----------------|
 | 47 | `MIGRATE1` | Migration status (1 year) | 1 = Same house, 3 = Within county, 5 = Between states, 6 = Abroad, ... |
- 
-> **Note**: IPUMS "Not in Universe" (NIU) values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
+
+> **Note**: IPUMS "Not in Universe" (NIU) sentinel values (e.g., 99, 999, 9999, ...) are replaced with `NaN` during preprocessing and imputed using median imputation via `sklearn.impute.SimpleImputer`.
+=======
 
 ---
 
