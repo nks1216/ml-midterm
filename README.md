@@ -10,6 +10,10 @@ To address this problem, we build a machine learning pipeline that includes data
 - What is the feature that is most relevant to predicting one's income?
 - Which machine learning model is more accurate in predicting one's income with the relative features?
 
+#### Motivation
+
+Personal income reflects a wide range of socioeconomic factors, making it an important indicator for understanding labor‑market outcomes and inequality. Traditional linear approaches often struggle to capture the nonlinear structure of income data, motivating the use of machine learning models. By comparing models with different inductive biases, we aim to identify the key determinants of income and evaluate which methods best capture its complex patterns.
+
 ---
 
 ## 2. Dataset Description
